@@ -6,10 +6,37 @@
   <link href="https://tytao.github.io/atom.xml" rel="self"/>
   
   <link href="https://tytao.github.io/"/>
-  <updated>2021-06-16T05:49:08.938Z</updated>
+  <updated>2021-06-27T15:10:00.629Z</updated>
   <id>https://tytao.github.io/</id>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>二分法</title>
+    <link href="https://tytao.github.io/2021/06/27/%E4%BA%8C%E5%88%86%E6%B3%95/"/>
+    <id>https://tytao.github.io/2021/06/27/%E4%BA%8C%E5%88%86%E6%B3%95/</id>
+    <published>2021-06-27T14:58:34.000Z</published>
+    <updated>2021-06-27T15:10:00.629Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;二分法&quot;&gt;&lt;a href=&quot;#二分法&quot; class=&quot;headerlink&quot; title=&quot;二分法&quot;&gt;&lt;/a&gt;二分法&lt;/h2&gt;&lt;h4 id=&quot;REF&quot;&gt;&lt;a href=&quot;#REF&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="Algorithm" scheme="https://tytao.github.io/categories/Algorithm/"/>
+    
+    
+    <category term="Aalgorithm" scheme="https://tytao.github.io/tags/Aalgorithm/"/>
+    
+    <category term="Leetcode" scheme="https://tytao.github.io/tags/Leetcode/"/>
+    
+  </entry>
   
   <entry>
     <title>hello world</title>
