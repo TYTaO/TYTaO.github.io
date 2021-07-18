@@ -6,10 +6,37 @@
   <link href="https://tytao.github.io/atom.xml" rel="self"/>
   
   <link href="https://tytao.github.io/"/>
-  <updated>2021-06-27T15:10:00.629Z</updated>
+  <updated>2021-07-18T15:27:04.360Z</updated>
   <id>https://tytao.github.io/</id>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>6.824 lab1 MapReduce</title>
+    <link href="https://tytao.github.io/2021/07/18/6-824-lab1-MapReduce/"/>
+    <id>https://tytao.github.io/2021/07/18/6-824-lab1-MapReduce/</id>
+    <published>2021-07-18T14:18:18.000Z</published>
+    <updated>2021-07-18T15:27:04.360Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;论文实现&quot;&gt;&lt;a href=&quot;#论文实现&quot; class=&quot;headerlink&quot; title=&quot;论文实现&quot;&gt;&lt;/a&gt;论文实现&lt;/h1&gt;&lt;p&gt;&lt;img src=&quot;https://i.loli.net/2021/07/18/qE9BlI63GyvCn45.png&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="6.824" scheme="https://tytao.github.io/categories/6-824/"/>
+    
+    
+    <category term="6.824" scheme="https://tytao.github.io/tags/6-824/"/>
+    
+    <category term="Distributed Systems" scheme="https://tytao.github.io/tags/Distributed-Systems/"/>
+    
+  </entry>
   
   <entry>
     <title>二分法</title>
