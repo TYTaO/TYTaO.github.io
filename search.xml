@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>hello world</title>
+    <url>/2021/06/16/hello-world/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>6.824 lab1 MapReduce</title>
+    <url>/2021/07/18/6-824-lab1-MapReduce/</url>
+    <content><![CDATA[<h1 id="论文实现"><a href="#论文实现" class="headerlink" title="论文实现"></a>论文实现</h1><p><img src="https://i.loli.net/2021/07/18/qE9BlI63GyvCn45.png" alt="image.png"></p>
+<p>看这个流程就基本明白了，</p>
+<ol>
+<li>每一个worker（master worker 特殊一点）都有相应的program，</li>
+<li>master分配相应的task（map or reduce）给各个worker</li>
+<li>input被分成多个splits到map worker上input splits被map function处理（给每一个input中的data加上key，形成intermediate key&#x2F;value pairs）</li>
+<li>intermediate key&#x2F;value pairs（in memory）被periodically写入本地磁盘，这个pair的位置就会返回给master，然后master负责转发这些位置给reduce worker</li>
+<li>reduce worker得知后，就使用<code>rpc</code>读取map worker磁盘中的数据（intermediate key&#x2F;value pairs），然后根据key对pairs进行排序，然后将key相同的聚合。（也就是现在的数据，每一个key有着一系列的values）</li>
+<li>迭代数据，将key相同的输入reduce function，输出被添加到输出文件中</li>
+<li>所有计算完成，master返回给user code</li>
+</ol>
+<p>注意：之后的output files一般并不需要合并，通常作为下一个<code>MapReduce</code>程序的输出，或者其他具有读取分布式文件能力的程序。</p>
+<p>简洁版：<strong>map负责将input分类，reduce负责处理每一类数据</strong>，OVER。</p>
+<h1 id="实验过程"><a href="#实验过程" class="headerlink" title="实验过程"></a>实验过程</h1><h2 id="0-github地址"><a href="#0-github地址" class="headerlink" title="0. github地址"></a>0. <a href="https://github.com/TYTaO/have-a-try-824">github地址</a></h2><h2 id="1-实现master与wroker的rpc通信"><a href="#1-实现master与wroker的rpc通信" class="headerlink" title="1. 实现master与wroker的rpc通信"></a>1. 实现master与wroker的rpc通信</h2><p>通过单独建一个包，用rpc.go规定两者之间的数据结构（待更优雅的解决方式）</p>
+<p>worker需要使用rpc call两次</p>
+<ul>
+<li>一次拿任务</li>
+<li>一次告诉master任务执行完毕</li>
+</ul>
+<h2 id="2-实现超时问题（解决worker挂掉的情况）"><a href="#2-实现超时问题（解决worker挂掉的情况）" class="headerlink" title="2. 实现超时问题（解决worker挂掉的情况）"></a>2. 实现超时问题（解决worker挂掉的情况）</h2><h4 id="遇见一个range问题"><a href="#遇见一个range问题" class="headerlink" title="遇见一个range问题"></a>遇见一个range问题</h4><p>range 数组时，</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 分发任务</span></span><br><span class="line"><span class="keyword">for</span> i, task := <span class="keyword">range</span> m.tasks &#123;  <span class="comment">// 这里m.tasks[i]是一个副本，而不是指向m.tasks[i]的指针，也就是对task的改动</span></span><br><span class="line"><span class="comment">// 不能影响m.tasks[i]</span></span><br><span class="line">    <span class="keyword">if</span> m.tasks[i].state == GENERATED &#123;</span><br><span class="line">        fmt.Printf(<span class="string">&quot;Distribute a task %d\n&quot;</span>, m.tasks[i].id)</span><br><span class="line">        reply.T = Task&#123;Id: m.tasks[i].id&#125;</span><br><span class="line">        m.tasks[i].state = DISTRIBUTED</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="全局变量问题"><a href="#全局变量问题" class="headerlink" title="全局变量问题"></a>全局变量问题</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> m *Master</span><br><span class="line"><span class="keyword">var</span> chans []<span class="keyword">chan</span> <span class="type">bool</span>  <span class="comment">// 用来传输任务已完成</span></span><br><span class="line"><span class="comment">// 通过rpc 给worker发任务</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    m = MakeMaster(<span class="number">10</span>) <span class="comment">// m := MakeMaster(10) 的话，m就不是全局变量了，</span></span><br><span class="line">	chans = <span class="built_in">make</span>([]<span class="keyword">chan</span> <span class="type">bool</span>, <span class="number">10</span>)</span><br><span class="line">	<span class="keyword">for</span> m.Done() == <span class="literal">false</span> &#123;</span><br><span class="line">		time.Sleep(<span class="number">2</span> * time.Second)</span><br><span class="line">	&#125;</span><br><span class="line">	time.Sleep(time.Second)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-实现不同任务的分发与协作"><a href="#3-实现不同任务的分发与协作" class="headerlink" title="3. 实现不同任务的分发与协作"></a>3. 实现不同任务的分发与协作</h2><blockquote>
+<p>两个task，A，B。B依赖于A</p>
+</blockquote>
+<h4 id="分发"><a href="#分发" class="headerlink" title="分发"></a>分发</h4><h4 id="协作"><a href="#协作" class="headerlink" title="协作"></a>协作</h4><h4 id="实现具体的map-reduce"><a href="#实现具体的map-reduce" class="headerlink" title="实现具体的map reduce"></a>实现具体的map reduce</h4><h2 id="4-实现固定Reduce的输出文件数量"><a href="#4-实现固定Reduce的输出文件数量" class="headerlink" title="4. 实现固定Reduce的输出文件数量"></a>4. 实现固定Reduce的输出文件数量</h2><h4 id="临时文件"><a href="#临时文件" class="headerlink" title="临时文件"></a>临时文件</h4><blockquote>
+<p>ensure that nobody observes partially written files in the presence of crashes， use <code>ioutil.TempFile</code> to create a temporary file and <code>os.Rename</code> to atomically rename it.</p>
+</blockquote>
+<h4 id="需要实现不同reduce-task对相对task-id结果的一个融合"><a href="#需要实现不同reduce-task对相对task-id结果的一个融合" class="headerlink" title="需要实现不同reduce task对相对task id结果的一个融合"></a>需要实现不同reduce task对相对task id结果的一个融合</h4><h4 id="ihash"><a href="#ihash" class="headerlink" title="ihash"></a>ihash</h4><p>其是对key（：word）进行hash，所以word相同的会到同一个reduce中。得大改代码了。。</p>
+<p>map task输出 多个<code>mr-X-Y</code>, where X is the Map task number, and Y is the reduce task number.</p>
+<h4 id="Workers-will-sometimes-need-to-wait-e-g-reduces-can’t-start-until-the-last-map-has-finished"><a href="#Workers-will-sometimes-need-to-wait-e-g-reduces-can’t-start-until-the-last-map-has-finished" class="headerlink" title="Workers will sometimes need to wait, e.g. reduces can’t start until the last map has finished."></a>Workers will sometimes need to wait, e.g. reduces can’t start until the last map has finished.</h4><p>说明reduce任务不能先执行，之前一直纠结于让reduce和map一起执行，然后reduce中间结果的问题。。。</p>
+<blockquote>
+<p>一个map task finished后，保存其生成的中间文件（存入m.reduceTaskFiles）。等到所有map结束后再生成reduce task</p>
+</blockquote>
+<h4 id="遇到一个占有锁不放（条件不满足），而另一个是来解决问题的，也进不去锁"><a href="#遇到一个占有锁不放（条件不满足），而另一个是来解决问题的，也进不去锁" class="headerlink" title="遇到一个占有锁不放（条件不满足），而另一个是来解决问题的，也进不去锁"></a>遇到一个占有锁不放（条件不满足），而另一个是来解决问题的，也进不去锁</h4><h4 id="得在返回之前释放锁鸭！！！！"><a href="#得在返回之前释放锁鸭！！！！" class="headerlink" title="得在返回之前释放锁鸭！！！！"></a>得在返回之前释放锁鸭！！！！</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">m.mtx.Unlock()</span><br><span class="line"><span class="keyword">if</span> hasDistribute &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// m.mtx.Unlock()   // ×</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-map并行测试不通过"><a href="#5-map并行测试不通过" class="headerlink" title="5. map并行测试不通过"></a>5. map并行测试不通过</h2><h4 id="一直timeout"><a href="#一直timeout" class="headerlink" title="一直timeout"></a>一直timeout</h4><p>mtiming的map相当废时间，每执行一次要1s，10个nReduce就是10s            </p>
+<blockquote>
+<p>先对整体执行一次mapf，之后对mapf的结果进行分段，而不是先分段。</p>
+</blockquote>
+<h4 id="执行20次mapf，让test误以为是20个并行"><a href="#执行20次mapf，让test误以为是20个并行" class="headerlink" title="执行20次mapf，让test误以为是20个并行"></a>执行20次mapf，让test误以为是20个并行</h4><blockquote>
+<p>先对整体执行一次mapf，之后对mapf的结果进行分段，而不是先分段。</p>
+</blockquote>
+<h2 id="6-crash-test不通过"><a href="#6-crash-test不通过" class="headerlink" title="6. crash test不通过"></a>6. crash test不通过</h2><p>我每次map task会调用10次mapf，而test设置的每次mapf都会有几率crash，所以得接着进行map，不能每次从头开始？</p>
+<p>map时间太长了，应该是我写的有问题。。</p>
+<h4 id="两个问题"><a href="#两个问题" class="headerlink" title="两个问题"></a>两个问题</h4><ul>
+<li>一次map task 10 次 crash机会</li>
+<li>map时间过长，容易超时</li>
+</ul>
+<blockquote>
+<p>先对整体执行一次mapf，之后对mapf的结果进行分段，而不是先分段。</p>
+</blockquote>
+<h4 id="所有的worker的request都在wait-map-task-finished"><a href="#所有的worker的request都在wait-map-task-finished" class="headerlink" title="所有的worker的request都在wait map task finished"></a>所有的worker的request都在wait map task finished</h4><p>之前把map task都分配后，再有request就进入wait map task finished阶段，但有map task crash了！！</p>
+<p>就导致无限等待了</p>
+]]></content>
+      <categories>
+        <category>6.824</category>
+      </categories>
+      <tags>
+        <tag>6.824</tag>
+        <tag>Distributed Systems</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>二分法</title>
+    <url>/2021/06/27/%E4%BA%8C%E5%88%86%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="二分法"><a href="#二分法" class="headerlink" title="二分法"></a>二分法</h2><h4 id="REF"><a href="#REF" class="headerlink" title="REF"></a>REF</h4><p><a href="https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/">leetcode 153</a></p>
+<h4 id="Key-of-Solution"><a href="#Key-of-Solution" class="headerlink" title="Key of Solution"></a>Key of Solution</h4><p>在于选择mi与le还是ri比较。通过找规律，可以发现两种情况下nums[mi]与nums[le], nums[ri]的关系（也就是作为缩小范围的依据）都会改变。</p>
+<p>然后mi的计算方式可能会有mi&#x3D;&#x3D;le的情况，其成为特例破坏我们预设的规则，所以选择nums[mi]与nums[ri]的比较，完美解决此题。</p>
+<h4 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">findMin</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">le</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">ri</span> <span class="operator">=</span> nums.length - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (le &lt; ri) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">mi</span> <span class="operator">=</span> (le + ri) / <span class="number">2</span>;</span><br><span class="line">            <span class="comment">// 1</span></span><br><span class="line">            <span class="keyword">if</span> (nums[mi] &gt; nums[ri]) &#123;</span><br><span class="line">                le = mi + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 2</span></span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                ri = mi;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> nums[le];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Algorithm</category>
+      </categories>
+      <tags>
+        <tag>Aalgorithm</tag>
+        <tag>Leetcode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Useful Blog</title>
+    <url>/2023/03/19/Useful-Blog/</url>
+    <content><![CDATA[<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://www.yezhem.com/index.php/archives/58/">https://www.yezhem.com/index.php/archives/58/</a></td>
+<td>给hyper-v虚拟机固定静态IP</td>
+</tr>
+</tbody></table>
+]]></content>
+  </entry>
+</search>
