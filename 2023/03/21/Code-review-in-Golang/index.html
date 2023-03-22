@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Code review in Golang |  TYTaO&#39;s Blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Code-review-in-Golang"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Code review in Golang
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/03/21/Code-review-in-Golang/" class="article-date">
+  <time datetime="2023-03-21T11:20:09.000Z" itemprop="datePublished">2023-03-21</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">5.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">19 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Code-review-in-Golang"><a href="#Code-review-in-Golang" class="headerlink" title="Code review in Golang"></a>Code review in Golang</h2><p>ref: <a target="_blank" rel="noopener" href="https://github.com/golang/go/wiki/CodeReviewComments">https://github.com/golang/go/wiki/CodeReviewComments</a></p>
+<h4 id="Gofmt"><a href="#Gofmt" class="headerlink" title="Gofmt"></a>Gofmt</h4><p>运行 <code>gofmt</code> 可以自动修复大部分机械风格问题。几乎所有在外部使用的 Golang 代码都使用 <code>gofmt</code> 进行<strong>格式化</strong>。</p>
+<h4 id="Comment-Sentences"><a href="#Comment-Sentences" class="headerlink" title="Comment Sentences"></a>Comment Sentences</h4><p>记录声明的注释，应该使用完整的句子。这种方法使得当将它们提取到 godoc 文档中时，它们的格式很好。<strong>注释应该以被描述的事物名称开头，并以句号结束</strong>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Request represents a request to run a command.</span></span><br><span class="line"><span class="keyword">type</span> Request <span class="keyword">struct</span> &#123; ...</span><br><span class="line"></span><br><span class="line"><span class="comment">// Encode writes the JSON encoding of req to w.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Encode</span><span class="params">(w io.Writer, req *Request)</span></span> &#123; ...</span><br></pre></td></tr></table></figure>
+
+<h4 id="Contexts"><a href="#Contexts" class="headerlink" title="Contexts"></a>Contexts</h4><p><code>context.Context</code> 类型的值在 API 和进程边界之间携带安全凭证、跟踪信息、截止时间和取消信号。Go 程序会将 Contexts 在整个函数调用链中显式传递，从传入的 RPC 和 HTTP 请求到传出的请求。</p>
+<p>大多数使用 Context 的函数应将其作为<strong>第一个参数接受</strong>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">F</span><span class="params">(ctx context.Context, /* other arguments */)</span></span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个从不特定于请求的函数可以使用 <code>context.Background()</code>，但即使您认为不需要，也要尽量传递一个 Context。默认情况下是传递一个 Context；只有在确有充分理由认为替代方案是错误的情况下，才直接使用 <code>context.Background()</code>。</p>
+<p><strong>不要将 Context 成员添加到结构类型中</strong>；相反，为该类型上每个需要传递它的方法添加一个 ctx 参数。唯一的例外是那些签名必须与标准库或第三方库中的接口匹配的方法。</p>
+<p>不要创建自定义 Context 类型或在函数签名中使用除 Context 以外的接口。</p>
+<p>如果您有应用程序数据需要传递，将其放在参数中、接收器中、全局变量中，或者，如果它确实属于那里，放在 Context 值中。</p>
+<p>Contexts 是<strong>不可变</strong>的，因此将相同的 ctx 传递给多个共享相同截止时间、取消信号、凭证、父跟踪等的调用是可以的。</p>
+<h4 id="Copying"><a href="#Copying" class="headerlink" title="Copying"></a>Copying</h4><p>为避免意外的别名问题，在从另一个包中复制结构体时要小心。例如，bytes.Buffer 类型包含一个 []byte 切片。如果您复制一个 Buffer，副本中的切片可能会别名原始数组，导致后续的方法调用产生令人惊讶的效果。</p>
+<p>通常情况下，如果类型 T 的方法与指针类型 *T 相关联，则不要复制类型 T 的值。</p>
+<p>举例如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 创建一个 bytes.Buffer 类型的实例</span></span><br><span class="line">	<span class="keyword">var</span> buf bytes.Buffer</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 向 buf 中写入数据</span></span><br><span class="line">	buf.WriteString(<span class="string">&quot;Hello, world!&quot;</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 复制 buf</span></span><br><span class="line">	bufCopy := buf</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 分别在原始 buf 和复制的 bufCopy 上调用方法</span></span><br><span class="line">	buf.WriteByte(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">	bufCopy.WriteByte(<span class="string">&#x27;B&#x27;</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 打印两个缓冲区的内容</span></span><br><span class="line">	fmt.Printf(<span class="string">&quot;Original buffer: %s\n&quot;</span>, buf.String())   <span class="comment">// 输出: Original buffer: Hello, world!B</span></span><br><span class="line">	fmt.Printf(<span class="string">&quot;Copied buffer: %s\n&quot;</span>, bufCopy.String()) <span class="comment">// 输出: Copied buffer: Hello, world!B</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 我们本来期望从 buf 中读取 &quot;Hello, world!A&quot;，但是结果却是 &quot;Hello, world!B&quot;。这是因为 buf 和 bufCopy 的底层数组共享同一内存，导致调用方法时产生了意外的效果。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在 Go 语言中，当我们直接将一个结构体赋值给另一个结构体时，实际上进行的是值复制。这意味着结构体中的每个字段都会被逐一复制到新的结构体中。对于简单类型（例如 int、float、bool 等）和数组，复制操作会创建新的数据副本。<strong>然而，对于切片（slice）和引用类型（如指针、映射和通道），复制操作仅复制它们的引用，而不会复制底层数据</strong>。</p>
+<p>在本例中，<code>bytes.Buffer</code> 类型包含一个 <code>[]byte</code> 切片。当我们直接复制 <code>bytes.Buffer</code> 时，<strong>它的底层数组并没有被复制，而只是复制了指向该底层数组的切片引用</strong>。因此，**<code>buf</code> 和 <code>bufCopy</code> 实际上共享同一块底层内存**。在这种情况下，对其中一个 <code>bytes.Buffer</code> 实例进行的任何更改都会影响另一个实例，从而导致意外的行为。</p>
+<p>要理解这一点，可以将切片想象成一个具有三个字段的结构体：一个指向底层数组的指针、一个表示切片长度的整数和一个表示切片容量的整数。当我们复制一个包含切片的结构体时，实际上复制的是这三个字段。因此，新切片和原切片指向的是相同的底层数组，它们共享相同的内存。</p>
+</blockquote>
+<h4 id="Crypto-Rand"><a href="#Crypto-Rand" class="headerlink" title="Crypto Rand"></a>Crypto Rand</h4><p>不要使用 math&#x2F;rand 包来生成密钥，即使是一次性的密钥也不行。未使用种子时，<strong>生成器是完全可预测的</strong>。使用 time.Nanoseconds() 作为种子时，<strong>只有几个比特的熵</strong>。相反，应该使用 crypto&#x2F;rand 的 Reader，如果需要文本，则可以将其打印为十六进制或 base64 格式：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;crypto/rand&quot;</span></span><br><span class="line">	<span class="comment">// &quot;encoding/base64&quot;</span></span><br><span class="line">	<span class="comment">// &quot;encoding/hex&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Key</span><span class="params">()</span></span> <span class="type">string</span> &#123;</span><br><span class="line">	buf := <span class="built_in">make</span>([]<span class="type">byte</span>, <span class="number">16</span>)</span><br><span class="line">	_, err := rand.Read(buf)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err) <span class="comment">// out of randomness, should never happen</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> fmt.Sprintf(<span class="string">&quot;%x&quot;</span>, buf)</span><br><span class="line">	<span class="comment">// or hex.EncodeToString(buf)</span></span><br><span class="line">	<span class="comment">// or base64.StdEncoding.EncodeToString(buf)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Declaring-Empty-Slices"><a href="#Declaring-Empty-Slices" class="headerlink" title="Declaring Empty Slices"></a>Declaring Empty Slices</h4><p>在声明一个空切片时，应该优先使用</p>
+<p><code>var t []string </code> 而不是  <code>t := []string&#123;&#125;</code></p>
+<p>前者声明了一个 <strong>nil 切片值</strong>，而后者是一个非 nil 但长度为零的切片。它们在功能上是等效的——它们的 len 和 cap 都为零——但是 nil 切片是首选的风格。</p>
+<p>需要注意的是，在某些有限的情况下，非 nil 但长度为零的切片是首选的，例如编码 JSON 对象时（nil 切片编码为 null，而 []string{} 编码为 JSON 数组 []）。</p>
+<p>在设计接口时，应避免将 nil 切片和非 nil、长度为零的切片区分开来，因为这可能会导致微妙的编程错误。</p>
+<p>有关 Go 中 nil 的更多讨论，请参见 Francesc Campoy 的演讲 <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=ynoY2xz-F8s">Understanding Nil</a>.</p>
+<h4 id="Don’t-Panic"><a href="#Don’t-Panic" class="headerlink" title="Don’t Panic"></a>Don’t Panic</h4><p>不要将 panic 用于正常的错误处理。使用 error 和多个返回值。</p>
+<p>通常情况下，当函数或方法遇到错误时，应该返回一个错误值，而不是抛出一个异常或使用 panic。这样可以使代码更加健壮和可靠，因为它允许代码在遇到错误时进行适当的处理，而不是在程序崩溃时才发现问题。</p>
+<h4 id="Error-Strings"><a href="#Error-Strings" class="headerlink" title="Error Strings"></a>Error Strings</h4><p>错误字符串不应该大写（除非以专有名词或缩写词开头），也不应该以标点符号结尾，因为它们通常是在其他上下文中打印的。也就是说，应该使用 fmt.Errorf(“something bad”) 而不是 fmt.Errorf(“Something bad”)，这样 log.Printf(“Reading %s: %v”, filename, err) 就可以格式化成一个无意义的大写字母中间消息。这不适用于日志记录，因为日志记录隐含是基于行的，不会与其他消息合并在一起。</p>
+<h4 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h4><p>添加新 package 时，请包括预期用途的示例：可运行的示例，或演示完整调用序列的简单测试。</p>
+<h4 id="Goroutine-Lifetimes"><a href="#Goroutine-Lifetimes" class="headerlink" title="Goroutine Lifetimes"></a>Goroutine Lifetimes</h4><p>当你启动 goroutine 时，<strong>要清楚它们何时（或是否）退出</strong>。</p>
+<p>goroutine 会因为在<strong>通道发送或接收时阻塞</strong>而泄露：<strong>即使它所阻塞的通道不可达，垃圾回收器也不会终止一个 goroutine</strong>。</p>
+<p>即使 goroutine 没有泄露，让它们在不再需要时仍处于执行状态可能会导致其他微妙且难以诊断的问题。<strong>在关闭的通道上发送消息会引发 panic</strong>。并且让 goroutine 长时间处于执行状态可能会导致不可预测的内存使用。</p>
+<p>尽量<strong>让并发代码简单明了</strong>，<strong>以便 goroutine 的生命周期显而易见</strong>。如果这不可行，就要<strong>记录 goroutine 退出的时间和原因</strong>。</p>
+<h4 id="Handle-Errors"><a href="#Handle-Errors" class="headerlink" title="Handle Errors"></a>Handle Errors</h4><p>不要使用 _ 变量丢弃错误。如果一个函数返回一个错误，<strong>要检查它以确保函数成功执行</strong>。要处理错误、返回错误，<strong>或者在真正异常的情况下使用 panic</strong>。</p>
+<h4 id="Imports"><a href="#Imports" class="headerlink" title="Imports"></a>Imports</h4><p>除非需要避免名称冲突，否则应避免重命名导入；良好的包名称不应需要重命名。在<strong>发生冲突的情况下，优先重命名最本地或项目特定的导入</strong>。</p>
+<p>导入应该组织在组中，并在它们之间有空白行。标准库的包始终在第一组中。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;hash/adler32&quot;</span></span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;github.com/foo/bar&quot;</span></span><br><span class="line">	<span class="string">&quot;rsc.io/goversion/version&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://pkg.go.dev/golang.org/x/tools/cmd/goimports">goimports</a> will do this for you.</p>
+<h4 id="Import-Blank"><a href="#Import-Blank" class="headerlink" title="Import Blank"></a>Import Blank</h4><p>仅为了副作用（我们只是希望该包中的代码能够执行一些副作用，例如注册一个 HTTP 处理器或者执行一些<strong>初始化逻辑</strong>。）而导入的包（使用语法 import _ “pkg”）应该只在程序的 <strong>main 包</strong>或需要它们的测试中被导入。</p>
+<h4 id="Go-modules简单使用"><a href="#Go-modules简单使用" class="headerlink" title="Go modules简单使用"></a>Go modules简单使用</h4><ul>
+<li>打开包含 <code>go.mod</code> 文件的文件夹作为工作区</li>
+<li>使用模块路径：<code>&quot;tytao.com/example/bar/testutil&quot;</code> 而不是  <code>&quot;bar/testutil&quot;</code></li>
+</ul>
+<h4 id="In-Band-Errors"><a href="#In-Band-Errors" class="headerlink" title="In-Band Errors"></a>In-Band Errors</h4><p>在 C 和类似的语言中，函数常常会返回像 -1 或 null 这样的值来表示错误或缺少结果。</p>
+<p>Go 支持<strong>多返回值</strong>提供了更好的解决方案。函数不应该要求客户端检查内部错误值，而是应该<strong>返回一个额外的值来指示其它返回值是否有效</strong>。这个返回值可以是一个错误，或者当不需要解释时可以是一个布尔值。它应该是最后一个返回值。</p>
+<h4 id="Indent-Error-Flow"><a href="#Indent-Error-Flow" class="headerlink" title="Indent Error Flow"></a>Indent Error Flow</h4><p>尽量将正常的代码路径<strong>保持在最小缩进</strong>，将错误处理缩进处理，首先处理它。这通过允许快速扫描正常路径来提高代码的可读性。例如，不要写成：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="comment">// error handling</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="comment">// normal code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Instead, write:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="comment">// error handling</span></span><br><span class="line">	<span class="keyword">return</span> <span class="comment">// or continue, etc.</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// normal code</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Initialisms"><a href="#Initialisms" class="headerlink" title="Initialisms"></a>Initialisms</h4><p>在名称中表示缩写或首字母缩写词的单词（例如 “URL” 或 “NATO”）应该具有一致的大小写。例如，”URL” 应该出现为 “URL” 或 “url”（例如 “urlPony” 或 “URLPony”），而不应该出现为 “Url”。例如：ServeHTTP 而不是 ServeHttp。对于有多个首字母缩写词的标识符，例如 “xmlHTTPRequest” 或 “XMLHTTPRequest”。</p>
+<p>当 “ID” 缩写代表 “identifier” 时（除了 “id” 代表 “自我”、”超我” 等的情况），此规则也适用，因此应该写成 “appID” 而不是 “appId”。</p>
+<p>由协议缓冲区编译器生成的代码不受此规则的约束。人工编写的代码应该比机器生成的代码更加严格。</p>
+<h4 id="Interfaces"><a href="#Interfaces" class="headerlink" title="Interfaces"></a>Interfaces</h4><p>通常情况下，<strong>Go 接口应该属于使用接口类型值的包，而不是实现这些值的包</strong>。实现包应该返回具体的类型（通常是指针或结构体类型）：这样就可以在不需要进行大量重构的情况下向实现中添加新的方法。</p>
+<p><strong>不要在 API 的实现方定义接口</strong> “用于模拟”；相反，设计 API 使得可以使用真实实现的公共 API 进行测试。</p>
+<p><strong>不要在使用前定义接口</strong>：如果没有实际的使用示例，那么很难判断是否需要接口，更不用说需要包含哪些方法了。</p>
+<p>也就是说，实现package中用具体类型，使用时用接口。</p>
+<h4 id="Line-Length"><a href="#Line-Length" class="headerlink" title="Line Length"></a>Line Length</h4><p>在 Go 代码中没有严格的行长度限制，但应避免过长的行。同样地，不要添加换行符来保持行的短小，如果它们长而更易读的话，例如重复的代码。</p>
+<p>大多数情况下，当人们在函数调用或函数声明的中间 “不自然” 地换行时，如果它们有合理数量的参数和合理长度的变量名，这种换行是不必要的。长行似乎与长变量名有关，<strong>去掉长变量名</strong>可以起到很大的帮助作用。</p>
+<p>换句话说，根据你<strong>正在编写的语义换行</strong>（作为一般规则），而不是因为行的长度。如果发现这导致行太长，那么改变名称或语义可能会得到一个好结果。</p>
+<p>实际上，这正是有关函数长度的建议。没有规则 “永远不要让函数超过 N 行”，但肯定有过长的函数和过于重复的微小函数，解决方法是<strong>改变函数边界的位置</strong>，而不是开始计算行数。</p>
+<h4 id="Named-Result-Parameters"><a href="#Named-Result-Parameters" class="headerlink" title="Named Result Parameters"></a>Named Result Parameters</h4><p>在编写 godoc 时要考虑函数的外观。有些情况，有名的结果参数会显得重复：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(n *Node)</span></span> Parent2() (node *Node, err <span class="type">error</span>) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最好使用：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(n *Node)</span></span> Parent2() (*Node, <span class="type">error</span>) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然而，如果一个函数返回两个或三个相同类型的参数，或者如果结果的含义从上下文中不清楚，添加名称在某些情况下可能是有用的。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f *Foo)</span></span> Location() (<span class="type">float64</span>, <span class="type">float64</span>, <span class="type">error</span>)</span><br></pre></td></tr></table></figure>
+
+<p>最好使用：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Location 返回 f 的纬度和经度。</span></span><br><span class="line"><span class="comment">// 负值分别表示南纬和西经。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f *Foo)</span></span> Location() (lat, long <span class="type">float64</span>, err <span class="type">error</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Naked-Returns"><a href="#Naked-Returns" class="headerlink" title="Naked Returns"></a>Naked Returns</h4><p>一个不带参数的返回语句会返回命名的返回值。这被称为 “裸返回”。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">split</span><span class="params">(sum <span class="type">int</span>)</span></span> (x, y <span class="type">int</span>) &#123;</span><br><span class="line">	x = sum * <span class="number">4</span> / <span class="number">9</span></span><br><span class="line">	y = sum - x</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Package-Comments"><a href="#Package-Comments" class="headerlink" title="Package Comments"></a>Package Comments</h4><p>包注释，就像所有要在 godoc 中显示的注释一样，必须紧邻着包声明语句出现，不能有空行。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Package math provides basic constants and mathematical functions.</span></span><br><span class="line"><span class="keyword">package</span> math</span><br></pre></td></tr></table></figure>
+
+<h4 id="Package-Names"><a href="#Package-Names" class="headerlink" title="Package Names"></a>Package Names</h4><p>在你的包中，<strong>所有对名称的引用都将使用包名，因此你可以省略标识符中的包名</strong>。例如，如果你在包 chubby 中，你不需要定义类型 ChubbyFile，客户端将会写成 chubby.ChubbyFile。相反，可以将该类型命名为 File，客户端将会写成 chubby.File。避免使用毫无意义的包名，如 util、common、misc、api、types 和 interfaces。更多信息请参见 <a target="_blank" rel="noopener" href="https://go.dev/doc/effective_go#package-names">https://go.dev/doc/effective_go#package-names</a> 和 <a target="_blank" rel="noopener" href="https://go.dev/blog/package-names%E3%80%82">https://go.dev/blog/package-names。</a></p>
+<h4 id="Pass-Values"><a href="#Pass-Values" class="headerlink" title="Pass Values"></a>Pass Values</h4><p><strong>不要仅仅为了节省几个字节而将指针作为函数参数传递</strong>。如果一个函数只是通过 <code>*x</code> 来引用它的参数 <code>x</code>，那么该参数就不应该是一个指针。这种情况的常见实例包括传递一个字符串的指针 (<code>*string</code>) 或一个接口值的指针 (<code>*io.Reader</code>)。<strong>在这两种情况下，值本身是固定大小的，可以直接传递</strong>。<strong>这个建议不适用于大的结构体，甚至是可能增长的小的结构体</strong>。</p>
+<p>也就是说，推荐使用值传递。</p>
+<h4 id="Receiver-Names"><a href="#Receiver-Names" class="headerlink" title="Receiver Names"></a>Receiver Names</h4><p>方法的接收者的名称应该<strong>反映其身份</strong>；通常一个类型的一个或两个字母的缩写就足够了（例如 “c” 或 “cl” 表示 “Client”）。不要使用通用名称，如 “me”、”this” 或 “self”，这些标识符是面向对象语言的典型标识符，给方法赋予了特殊的含义。<strong>在 Go 中</strong>，<strong>方法的接收者只是另一个参数，因此应该相应地命名</strong>。接收者的名称不必像方法参数那样具有描述性，因为它的作用是显而易见的，没有文档目的。名称可以非常短，因为它将出现在类型的每个方法的几乎每一行代码中；熟悉可以缩短长度。也要保持一致：如果在一个方法中将接收者称为 “c”，则在另一个方法中不要将其称为 “cl”。</p>
+<h4 id="Receiver-Type"><a href="#Receiver-Type" class="headerlink" title="Receiver Type"></a>Receiver Type</h4><p>对于方法<strong>是否使用值接收者或指针接收者的选择可能很困难</strong>，尤其<strong>对于新手来说。如果不确定，使用指针</strong>，但有时候值接收者更加合理，通常是出于效率的原因，例如对于小的不可变结构体或基本类型的值。以下是一些有用的指南：</p>
+<ul>
+<li>如果接收者是 map、func 或 chan，不要使用它们的指针。如果接收者是 slice，并且方法不会重新分配或重新分片 slice，则不要使用它的指针。</li>
+<li>如果方法<strong>需要修改接收者，接收者必须是指针</strong>。</li>
+<li>如果接收者是<strong>包含 sync.Mutex 或类似同步字段的结构体，则接收者必须是指针</strong>，以避免复制。</li>
+<li>如果接收者是大型结构体或数组，则指针接收者更有效率。多大才算大？假设它相当于将所有元素作为参数传递给方法。如果感觉太大了，接收者也太大了。</li>
+<li>函数或方法是否可以在并发时或从此方法调用时修改接收者？值类型在调用方法时创建接收者的副本，因此外部更新不会应用于此接收者。如果必须在原始接收者中看到更改，则接收者必须是指针。</li>
+<li>如果接收者是结构体、数组或切片，并且其中任何一个元素是指向可能<strong>发生变化</strong>的东西的指针，那么最好使用指针接收者，因为这将使意图更清晰。</li>
+<li>如果接收者是一个小的数组或结构体，自然是一个值类型（例如 time.Time 类型），没有可变的字段和指针，或者只是一个简单的基本类型，如 int 或 string，则值接收者是有意义的。<strong>值接收者可以减少可能产生的垃圾量；如果将一个值传递给值方法，则可以使用栈上的副本而不是在堆上分配。</strong>编译器试图聪明地避免这种分配，但不总是成功。<strong>不要在没有进行性能分析的情况下出于这个原因选择值接收者类型</strong>。</li>
+<li><strong>不要混合使用接收者类型</strong>。对所有可用方法选择指针或结构体类型。</li>
+<li>最后，<strong>如果不确定，请使用指针接收者</strong>。</li>
+</ul>
+<h4 id="Synchronous-Functions"><a href="#Synchronous-Functions" class="headerlink" title="Synchronous Functions"></a>Synchronous Functions</h4><p>建议优先选择<strong>同步函数</strong> - 即在返回结果之前直接返回或完成任何回调或通道操作的函数。</p>
+<p>同步函数可以将 goroutine <strong>限定在一个调用中，使得更容易理解它们的生命周期并避免泄漏和数据竞争</strong>。它们也更容易进行测试：调用者可以传递输入并检查输出，<strong>而无需进行轮询或同步</strong>。</p>
+<p>如果<strong>调用者需要更多并发性</strong>，他们可以轻松地通过<strong>从单独的 goroutine 中调用该函数</strong>来实现。但是，在调用者端删除不必要的并发性通常是相当困难甚至不可能的。</p>
+<p>也就是说，函数尽量写成同步的，调用时可以方便的控制并发量。</p>
+<h4 id="Useful-Test-Failures"><a href="#Useful-Test-Failures" class="headerlink" title="Useful Test Failures"></a>Useful Test Failures</h4><p>测试应该以有用的错误信息失败，说明出了什么问题，使用了什么输入，实际得到了什么，期望得到了什么。可能会想编写一堆 assertFoo 辅助函数，<strong>但要确保这些函数产生有用的错误信息</strong>。假设调试失败的测试的人不是你，也不是你的团队。一个典型的 Go 测试失败如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> got != tt.want &#123;</span><br><span class="line">	t.Errorf(<span class="string">&quot;Foo(%q) = %d; want %d&quot;</span>, tt.in, got, tt.want) <span class="comment">// 或者使用 Fatalf，如果测试不能测试此点以外的任何内容</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>请注意，这里的顺序是<strong>实际结果 !&#x3D; 期望结果</strong>，错误消息也使用该顺序。一些测试框架鼓励将它们写反：0 !&#x3D; x，”期望得到 0，实际得到 x”等等。但 Go 不是这样的。</p>
+<p>如果感觉这样打字太多了，可以考虑编写<strong>表驱动测试</strong>。</p>
+<p>另一种常见的技术是在使用不同输入的测试助手时，使用不同的 TestFoo 函数包装每个调用，这样测试失败时会显示该名称：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestSingleValue</span><span class="params">(t *testing.T)</span></span> &#123; testHelper(t, []<span class="type">int</span>&#123;<span class="number">80</span>&#125;) &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestNoValues</span><span class="params">(t *testing.T)</span></span> &#123; testHelper(t, []<span class="type">int</span>&#123;&#125;) &#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>无论如何，你需要为将来调试你的代码的人<strong>提供有用的失败信息</strong>。</p>
+<h4 id="Variable-Names"><a href="#Variable-Names" class="headerlink" title="Variable Names"></a>Variable Names</h4><p>Go 中的变量名应该是简短的而不是长的。这对于具有<strong>有限作用域的局部变量</strong>尤其如此。应该优先选择 c 而不是 lineCount。应该优先选择 i 而不是 sliceIndex。</p>
+<p><strong>基本规则是：距离其声明越远的地方使用的名称，名称越需要详细描述。</strong>对于方法接收器，一个或两个字母就足够了。常见的变量，如循环索引和读取器，可以使用单个字母（i、r）。更不寻常的事物和全局变量需要更详细的名称。</p>
+<p>另请参见 <a target="_blank" rel="noopener" href="https://google.github.io/styleguide/go/decisions#variable-names">the Google Go Style Guide</a>中的更长讨论。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tytao.github.io/2023/03/21/Code-review-in-Golang/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Learning/" rel="tag">Learning</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2023/03/20/Git-Learning/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Git Learning</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.staticfile.org/valine/1.4.16/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "cQtGojRxBjeY7kx4esUCNF0U-gzGzoHsz",
+    app_key: "rvuWgVFgNlhSdSbEz5D8pqHM",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2021-2023
+        <i class="ri-heart-fill heart_icon"></i> TYTaO&#39;s Blog
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="TYTaO&#39;s Blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" target="_blank" rel="noopener" href="http://shenyu-vip.lofter.com">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/%E6%94%AF%E4%BB%98%E5%AE%9D%E6%94%B6%E9%92%B1small.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/%E5%BE%AE%E4%BF%A1%E6%94%B6%E9%92%B1small.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
