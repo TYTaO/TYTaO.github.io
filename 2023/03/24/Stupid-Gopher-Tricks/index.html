@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Stupid Gopher Tricks |  TYTaO&#39;s Blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Stupid-Gopher-Tricks"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Stupid Gopher Tricks
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/03/24/Stupid-Gopher-Tricks/" class="article-date">
+  <time datetime="2023-03-24T02:49:25.000Z" itemprop="datePublished">2023-03-24</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">4.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">21 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Stupid-Gopher-Tricks"><a href="#Stupid-Gopher-Tricks" class="headerlink" title="Stupid Gopher Tricks"></a>Stupid Gopher Tricks</h1><h2 id="Language"><a href="#Language" class="headerlink" title="Language"></a>Language</h2><h4 id="Type-literals"><a href="#Type-literals" class="headerlink" title="Type literals"></a>Type literals</h4><p>这里是一个熟悉的类型声明：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Foo <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="type">int</span></span><br><span class="line">    s <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类型声明的后半部分是类型字面量：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="type">int</span></span><br><span class="line">    s <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其他类型字面量的例子包括 int 和 []string，它们也可以声明为命名类型：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Bar <span class="type">int</span></span><br><span class="line"><span class="keyword">type</span> Qux []<span class="type">string</span></span><br></pre></td></tr></table></figure>
+
+<p>虽然我们通常在变量声明中使用 int 和 []string：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i <span class="type">int</span></span><br><span class="line"><span class="keyword">var</span> s []<span class="type">string</span></span><br></pre></td></tr></table></figure>
+
+<p>但是对于结构体，使用相同的方式不太常见（但同样有效）：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> t <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="type">int</span></span><br><span class="line">    s <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个未命名的结构体字面量通常被称为<strong>匿名结构体</strong>。</p>
+<h4 id="Anonymous-structs-template-data"><a href="#Anonymous-structs-template-data" class="headerlink" title="Anonymous structs: template data"></a>Anonymous structs: template data</h4><p>一个常见的用途是为模板提供数据：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">data := <span class="keyword">struct</span> &#123;</span><br><span class="line">    Title               <span class="type">string</span></span><br><span class="line">    Firstname, Lastname <span class="type">string</span></span><br><span class="line">    Rank                <span class="type">int</span></span><br><span class="line">&#125;&#123;</span><br><span class="line">    <span class="string">&quot;Dr&quot;</span>, <span class="string">&quot;Carl&quot;</span>, <span class="string">&quot;Sagan&quot;</span>, <span class="number">7</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> err := tmpl.Execute(os.Stdout, data); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatal(err)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>你也可以使用 map[string]interface{}，但那样会牺牲性能和类型安全。</p>
+<h4 id="Anonymous-structs-JSON"><a href="#Anonymous-structs-JSON" class="headerlink" title="Anonymous structs: JSON"></a>Anonymous structs: JSON</h4><p>相同的技术可以用于编码 JSON 对象：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">b, err := json.Marshal(<span class="keyword">struct</span> &#123;</span><br><span class="line">    ID   <span class="type">int</span></span><br><span class="line">    Name <span class="type">string</span></span><br><span class="line">&#125;&#123;<span class="number">42</span>, <span class="string">&quot;The answer&quot;</span>&#125;)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatal(err)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Printf(<span class="string">&quot;%s\n&quot;</span>, b)</span><br></pre></td></tr></table></figure>
+
+<p>同样也可以进行解码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> data <span class="keyword">struct</span> &#123;</span><br><span class="line">    ID   <span class="type">int</span></span><br><span class="line">    Name <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line">err := json.Unmarshal([]<span class="type">byte</span>(<span class="string">`&#123;&quot;ID&quot;: 42, &quot;Name&quot;: &quot;The answer&quot;&#125;`</span>), &amp;data)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatal(err)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(data.ID, data.Name)</span><br></pre></td></tr></table></figure>
+
+<p>结构体可以嵌套以描述更复杂的 JSON 对象：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> data <span class="keyword">struct</span> &#123;</span><br><span class="line">    ID     <span class="type">int</span></span><br><span class="line">    Person <span class="keyword">struct</span> &#123;</span><br><span class="line">        Name <span class="type">string</span></span><br><span class="line">        Job  <span class="type">string</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> s = <span class="string">`&#123;&quot;ID&quot;:42,&quot;Person&quot;:&#123;&quot;Name&quot;:&quot;George Costanza&quot;,&quot;Job&quot;:&quot;Architect&quot;&#125;&#125;`</span></span><br><span class="line">err := json.Unmarshal([]<span class="type">byte</span>(s), &amp;data)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatal(err)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(data.ID, data.Person.Name, data.Person.Job)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Repeated-literals-and-struct-names"><a href="#Repeated-literals-and-struct-names" class="headerlink" title="Repeated literals and struct names"></a>Repeated literals and struct names</h4><p>在像切片和映射这样的重复字面量中，Go 允许您省略内部类型名称：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Foo <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="type">int</span></span><br><span class="line">    s <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> s = []Foo&#123;</span><br><span class="line">    &#123;<span class="number">6</span> * <span class="number">9</span>, <span class="string">&quot;Question&quot;</span>&#125;,</span><br><span class="line">    &#123;<span class="number">42</span>, <span class="string">&quot;Answer&quot;</span>&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> m = <span class="keyword">map</span>[<span class="type">int</span>]Foo&#123;</span><br><span class="line">    <span class="number">7</span>: &#123;<span class="number">6</span> * <span class="number">9</span>, <span class="string">&quot;Question&quot;</span>&#125;,</span><br><span class="line">    <span class="number">3</span>: &#123;<span class="number">42</span>, <span class="string">&quot;Answer&quot;</span>&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Repeated-literals-and-anonymous-structs"><a href="#Repeated-literals-and-anonymous-structs" class="headerlink" title="Repeated literals and anonymous structs"></a>Repeated literals and anonymous structs</h4><p>结合匿名结构体，这种便利可以大大缩短代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> s = []<span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="type">int</span></span><br><span class="line">    s <span class="type">string</span></span><br><span class="line">&#125;&#123;</span><br><span class="line">    <span class="keyword">struct</span> &#123;</span><br><span class="line">        i <span class="type">int</span></span><br><span class="line">        s <span class="type">string</span></span><br><span class="line">    &#125;&#123;<span class="number">6</span> * <span class="number">9</span>, <span class="string">&quot;Question&quot;</span>&#125;,</span><br><span class="line">    <span class="keyword">struct</span> &#123;</span><br><span class="line">        i <span class="type">int</span></span><br><span class="line">        s <span class="type">string</span></span><br><span class="line">    &#125;&#123;<span class="number">42</span>, <span class="string">&quot;Answer&quot;</span>&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> t = []<span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="type">int</span></span><br><span class="line">    s <span class="type">string</span></span><br><span class="line">&#125;&#123;</span><br><span class="line">    &#123;<span class="number">6</span> * <span class="number">9</span>, <span class="string">&quot;Question&quot;</span>&#125;,</span><br><span class="line">    &#123;<span class="number">42</span>, <span class="string">&quot;Answer&quot;</span>&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Anonymous-structs-test-cases"><a href="#Anonymous-structs-test-cases" class="headerlink" title="Anonymous structs: test cases"></a>Anonymous structs: test cases</h4><p>这些特性使得表达测试用例的方式非常优雅：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestIndex</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> tests = []<span class="keyword">struct</span> &#123;</span><br><span class="line">        s   <span class="type">string</span></span><br><span class="line">        sep <span class="type">string</span></span><br><span class="line">        out <span class="type">int</span></span><br><span class="line">    &#125;&#123;</span><br><span class="line">        &#123;<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="number">0</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&quot;&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="number">-1</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&quot;fo&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="number">-1</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="number">0</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&quot;oofofoofooo&quot;</span>, <span class="string">&quot;f&quot;</span>, <span class="number">2</span>&#125;,</span><br><span class="line">        <span class="comment">// etc</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> _, test := <span class="keyword">range</span> tests &#123;</span><br><span class="line">        actual := strings.Index(test.s, test.sep)</span><br><span class="line">        <span class="keyword">if</span> actual != test.out &#123;</span><br><span class="line">            t.Errorf(<span class="string">&quot;Index(%q,%q) = %v; want %v&quot;</span>, test.s, test.sep, actual, test.out)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>您还可以更进一步，将复合字面量放在 range 语句本身中：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestIndex</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> _, test := <span class="keyword">range</span> []<span class="keyword">struct</span> &#123;</span><br><span class="line">        s   <span class="type">string</span></span><br><span class="line">        sep <span class="type">string</span></span><br><span class="line">        out <span class="type">int</span></span><br><span class="line">    &#125;&#123;</span><br><span class="line">        &#123;<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="number">0</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&quot;&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="number">-1</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&quot;fo&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="number">-1</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="number">0</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&quot;oofofoofooo&quot;</span>, <span class="string">&quot;f&quot;</span>, <span class="number">2</span>&#125;,</span><br><span class="line">        <span class="comment">// etc</span></span><br><span class="line">    &#125; &#123;</span><br><span class="line">        actual := strings.Index(test.s, test.sep)</span><br><span class="line">        <span class="keyword">if</span> actual != test.out &#123;</span><br><span class="line">            t.Errorf(<span class="string">&quot;Index(%q,%q) = %v; want %v&quot;</span>, test.s, test.sep, actual, test.out)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但这样更难阅读。nonono</p>
+<h4 id="Embedded-fields"><a href="#Embedded-fields" class="headerlink" title="Embedded fields"></a>Embedded fields</h4><p>一个没有名称的结构体字段是一个嵌入字段。<br>嵌入类型的方法（如果它是一个结构体，则还包括字段）<br><strong>可以像它们是嵌入结构体的一部分一样访问</strong>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span> &#123;</span><br><span class="line">    s <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a A)</span></span> String() <span class="type">string</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> fmt.Sprintf(<span class="string">&quot;A&#x27;s String method called: %v&quot;</span>, a.s)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> B <span class="keyword">struct</span> &#123;</span><br><span class="line">    A</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    b := B&#123;&#125;</span><br><span class="line">    b.s = <span class="string">&quot;some value&quot;</span> <span class="comment">//here</span></span><br><span class="line">    fmt.Println(b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Anonymous-structs-embedded-mutex"><a href="#Anonymous-structs-embedded-mutex" class="headerlink" title="Anonymous structs: embedded mutex"></a>Anonymous structs: embedded mutex</h4><p>当然，您可以在匿名结构体中嵌入字段。</p>
+<p>通常用互斥变量保护全局变量：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">    viewCount   <span class="type">int64</span></span><br><span class="line">    viewCountMu sync.Mutex</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>通过在匿名结构体中嵌入一个互斥量，我们可以将相关的值分组：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> viewCount <span class="keyword">struct</span> &#123;</span><br><span class="line">    sync.Mutex</span><br><span class="line">    n <span class="type">int64</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 viewCount 的用户可以像这样访问它：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">viewCount.Lock()</span><br><span class="line">viewCount.n++</span><br><span class="line">viewCount.Unlock()</span><br></pre></td></tr></table></figure>
+
+<h4 id="Anonymous-structs-implementing-interfaces"><a href="#Anonymous-structs-implementing-interfaces" class="headerlink" title="Anonymous structs: implementing interfaces"></a>Anonymous structs: implementing interfaces</h4><p>您还可以嵌入接口。</p>
+<p>这是 Camlistore 中的一个真实例子：</p>
+<p>该函数期望返回一个 <code>ReadSeekCloser</code>，但程序员只有一个字符串 <code>s</code>。</p>
+<p>匿名结构体（以及它的标准库朋友们）来拯救！</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">struct</span> &#123;</span><br><span class="line">    io.ReadSeeker</span><br><span class="line">    io.Closer</span><br><span class="line">&#125;&#123;</span><br><span class="line">    io.NewSectionReader(strings.NewReader(s), <span class="number">0</span>, <span class="type">int64</span>(<span class="built_in">len</span>(s))),</span><br><span class="line">    ioutil.NopCloser(<span class="literal">nil</span>),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// in package io</span></span><br><span class="line"><span class="keyword">type</span> ReadSeeker <span class="keyword">interface</span> &#123;</span><br><span class="line">	Reader</span><br><span class="line">	Seeker</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> ReadSeekCloser <span class="keyword">interface</span> &#123;</span><br><span class="line">	Reader</span><br><span class="line">	Seeker</span><br><span class="line">	Closer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也就是说，嵌入匿名类型，带来了字段与方法</p>
+<h4 id="Anonymous-interfaces"><a href="#Anonymous-interfaces" class="headerlink" title="Anonymous interfaces"></a>Anonymous interfaces</h4><p>接口可以是匿名的，最常见的是interface{}。</p>
+<p>但接口不一定是空的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> s <span class="keyword">interface</span> &#123;</span><br><span class="line">		String() <span class="type">string</span></span><br><span class="line">	&#125; = bytes.NewBufferString(<span class="string">&quot;I&#x27;m secretly a fmt.Stringer!&quot;</span>)</span><br><span class="line">	fmt.Println(s.String())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这对于诡秘的类型断言非常有用（来自src&#x2F;os&#x2F;exec&#x2F;exec_test.go）：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Check that we can access methods of the underlying os.File.</span></span><br><span class="line"><span class="keyword">if</span> _, ok := stdin.(<span class="keyword">interface</span> &#123;</span><br><span class="line">    Fd() <span class="type">uintptr</span></span><br><span class="line">&#125;); !ok &#123;</span><br><span class="line">    t.Error(<span class="string">&quot;can&#x27;t access methods of underlying *os.File&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Method-values"><a href="#Method-values" class="headerlink" title="Method values"></a>Method values</h4><p>“方法值”指的是将方法作为表达式进行求值的结果，其结果是一个函数值。</p>
+<p>从 <em>type</em>中评估方法会产生一个<strong>函数</strong>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f <span class="function"><span class="keyword">func</span><span class="params">(*bytes.Buffer, <span class="type">string</span>)</span></span> (<span class="type">int</span>, <span class="type">error</span>)</span><br><span class="line"><span class="keyword">var</span> buf bytes.Buffer</span><br><span class="line">f = (*bytes.Buffer).WriteString</span><br><span class="line">f(&amp;buf, <span class="string">&quot;y u no buf.WriteString?&quot;</span>)</span><br><span class="line">buf.WriteTo(os.Stdout)</span><br></pre></td></tr></table></figure>
+
+<p>: y u no buf.WriteString?</p>
+<p><em><em>从</em>value* 中评估方法会创建一个闭包，其中包含了该*value</em> **：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f <span class="function"><span class="keyword">func</span><span class="params">(<span class="type">string</span>)</span></span> (<span class="type">int</span>, <span class="type">error</span>)</span><br><span class="line"><span class="keyword">var</span> buf bytes.Buffer</span><br><span class="line">f = buf.WriteString</span><br><span class="line">f(<span class="string">&quot;Hey... &quot;</span>)</span><br><span class="line">f(<span class="string">&quot;this *is* cute.&quot;</span>)</span><br><span class="line">buf.WriteTo(os.Stdout)</span><br></pre></td></tr></table></figure>
+
+<p>: Hey… this <em>is</em> cute.</p>
+<h4 id="Method-values-sync-Once"><a href="#Method-values-sync-Once" class="headerlink" title="Method values: sync.Once"></a>Method values: sync.Once</h4><p>sync.Once 类型用于实现一次性的任务，并保证并发安全。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Once is an object that will perform exactly one action.</span></span><br><span class="line"><span class="keyword">type</span> Once <span class="keyword">struct</span> &#123; <span class="comment">/* Has unexported fields. */</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(o *Once)</span></span> Do(f <span class="function"><span class="keyword">func</span><span class="params">()</span></span>)</span><br></pre></td></tr></table></figure>
+
+<p>以下的 LazyPrimes 类型在第一次使用时计算一组素数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> LazyPrimes <span class="keyword">struct</span> &#123;</span><br><span class="line">    once   sync.Once <span class="comment">// 保护素数切片的并发访问。</span></span><br><span class="line">    primes []<span class="type">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *LazyPrimes)</span></span> init() &#123;</span><br><span class="line">    <span class="comment">// 使用素数填充 p.primes。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *LazyPrimes)</span></span> Primes() []<span class="type">int</span> &#123;</span><br><span class="line">    p.once.Do(p.init)</span><br><span class="line">    <span class="keyword">return</span> p.primes</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="插：Golang-中的闭包"><a href="#插：Golang-中的闭包" class="headerlink" title="插：Golang 中的闭包"></a>插：Golang 中的闭包</h4><p>在 Go 语言中，闭包是指一个函数能够<strong>捕获并使用其外部作用域中的变量</strong>。<strong>闭包由两部分组成：一个是函数本身，另一个是外部变量的引用</strong>。闭包允许函数在定义时捕获环境状态，并在后续调用中继续使用该状态。</p>
+<p>下面是一个典型的 Go 闭包示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// createCounter 返回一个匿名函数，该匿名函数能访问并修改其外部作用域中的变量 count</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">createCounter</span><span class="params">()</span></span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    count := <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> <span class="type">int</span> &#123;</span><br><span class="line">        count++</span><br><span class="line">        <span class="keyword">return</span> count</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    counter := createCounter() <span class="comment">// counter 是一个闭包，它捕获了 createCounter 函数中的 count 变量</span></span><br><span class="line"></span><br><span class="line">    fmt.Println(counter()) <span class="comment">// 输出: 1</span></span><br><span class="line">    fmt.Println(counter()) <span class="comment">// 输出: 2</span></span><br><span class="line">    fmt.Println(counter()) <span class="comment">// 输出: 3</span></span><br><span class="line"></span><br><span class="line">    anotherCounter := createCounter() <span class="comment">// 创建一个新的闭包，捕获了一个新的 count 变量</span></span><br><span class="line"></span><br><span class="line">    fmt.Println(anotherCounter()) <span class="comment">// 输出: 1</span></span><br><span class="line">    fmt.Println(anotherCounter()) <span class="comment">// 输出: 2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>createCounter</code> 函数返回一个匿名函数，该匿名函数可以访问和修改其外部作用域中的 <code>count</code> 变量。每次调用 <code>createCounter()</code>，都会生成一个新的闭包，这个闭包捕获了一个新的 <code>count</code> 变量。在 <code>main</code> 函数中，我们创建了两个闭包：<code>counter</code> 和 <code>anotherCounter</code>。尽管它们都是由 <code>createCounter</code> 函数创建的，但它们捕获了不同的 <code>count</code> 变量，因此它们的状态是独立的。</p>
+<p>闭包常用于实现诸如状态封装、生成器、延迟计算和异步操作等功能。在上面的示例中，我们使用闭包来实现一个简单的计数器。这种计数器可以在多次调用之间保持自己的状态，而不需要使用全局变量。</p>
+<h4 id="Method-values-HTTP-handlers"><a href="#Method-values-HTTP-handlers" class="headerlink" title="Method values: HTTP handlers"></a>Method values: HTTP handlers</h4><p>您可以使用方法值来使用一个类型实现多个 HTTP 处理程序：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Server <span class="keyword">struct</span> &#123;</span><br><span class="line">    <span class="comment">// Server state.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Server)</span></span> index(w http.ResponseWriter, r *http.Request)  &#123; <span class="comment">/* Implementation. */</span> &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Server)</span></span> edit(w http.ResponseWriter, r *http.Request)   &#123; <span class="comment">/* Implementation. */</span> &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Server)</span></span> <span class="built_in">delete</span>(w http.ResponseWriter, r *http.Request) &#123; <span class="comment">/* Implementation. */</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Server)</span></span> Register(mux *http.ServeMux) &#123;</span><br><span class="line">    mux.HandleFunc(<span class="string">&quot;/&quot;</span>, s.index)</span><br><span class="line">    mux.HandleFunc(<span class="string">&quot;/edit/&quot;</span>, s.edit)</span><br><span class="line">    mux.HandleFunc(<span class="string">&quot;/delete/&quot;</span>, s.<span class="built_in">delete</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Method-values-another-example"><a href="#Method-values-another-example" class="headerlink" title="Method values: another example"></a>Method values: another example</h4><p>在 os&#x2F;exec 包中，Cmd 类型实现了设置标准输入、输出和错误的方法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Cmd)</span></span> stdin() (f *os.File, err <span class="type">error</span>)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Cmd)</span></span> stdout() (f *os.File, err <span class="type">error</span>)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Cmd)</span></span> stderr() (f *os.File, err <span class="type">error</span>)</span><br></pre></td></tr></table></figure>
+
+<p>调用者<strong>以相同的方式处理每个方法</strong>，因此它会迭代方法值的切片：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> F <span class="function"><span class="keyword">func</span><span class="params">(*Cmd)</span></span> (*os.File, <span class="type">error</span>)</span><br><span class="line"><span class="keyword">for</span> _, setupFd := <span class="keyword">range</span> []F&#123;(*Cmd).stdin, (*Cmd).stdout, (*Cmd).stderr&#125; &#123;</span><br><span class="line">    fd, err := setupFd(c)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        c.closeDescriptors(c.closeAfterStart)</span><br><span class="line">        c.closeDescriptors(c.closeAfterWait)</span><br><span class="line">        <span class="keyword">return</span> err</span><br><span class="line">    &#125;</span><br><span class="line">    c.childFiles = <span class="built_in">append</span>(c.childFiles, fd)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>啥都可以迭代</p>
+<h4 id="Comparable-types"><a href="#Comparable-types" class="headerlink" title="Comparable types"></a>Comparable types</h4><p>Go 规范将一组类型定义为“可比较类型”，它们可以使用 &#x3D;&#x3D; 和 !&#x3D; 进行比较。</p>
+<p>布尔值、整数、浮点数、复数、字符串、指针、通道、结构体和接口都是可比较的。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a, b <span class="type">int</span> = <span class="number">42</span>, <span class="number">42</span></span><br><span class="line">fmt.Println(a == b)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> i, j <span class="keyword">interface</span>&#123;&#125; = a, b</span><br><span class="line">fmt.Println(i == j)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> s, t <span class="keyword">struct</span>&#123; i <span class="keyword">interface</span>&#123;&#125; &#125;</span><br><span class="line">s.i, t.i = a, b</span><br><span class="line">fmt.Println(s == t)</span><br></pre></td></tr></table></figure>
+
+<p>仅当结构体的字段是可比较的时，它才是可比较的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> q, r <span class="keyword">struct</span>&#123; s []<span class="type">string</span> &#125;</span><br><span class="line">fmt.Println(q == r) <span class="comment">// invalid operation: cannot compare q == r (struct containing []string cannot be compared)</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Comparable-types-and-map-keys"><a href="#Comparable-types-and-map-keys" class="headerlink" title="Comparable types and map keys"></a>Comparable types and map keys</h4><p>任何可比较的类型都可以用作映射键。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">a := <span class="keyword">map</span>[<span class="type">int</span>]<span class="type">bool</span>&#123;&#125;</span><br><span class="line">a[<span class="number">42</span>] = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> T <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="type">int</span></span><br><span class="line">    s <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">b := <span class="keyword">map</span>[*T]<span class="type">bool</span>&#123;&#125;</span><br><span class="line">b[&amp;T&#123;&#125;] = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">c := <span class="keyword">map</span>[T]<span class="type">bool</span>&#123;&#125;</span><br><span class="line">c[T&#123;<span class="number">37</span>, <span class="string">&quot;hello!&quot;</span>&#125;] = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">d := <span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;]<span class="type">bool</span>&#123;&#125;</span><br><span class="line">d[<span class="number">42</span>] = <span class="literal">true</span></span><br><span class="line">d[&amp;T&#123;&#125;] = <span class="literal">true</span></span><br><span class="line">d[T&#123;<span class="number">123</span>, <span class="string">&quot;four five six&quot;</span>&#125;] = <span class="literal">true</span></span><br><span class="line">d[ioutil.Discard] = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Structs-as-map-keys"><a href="#Structs-as-map-keys" class="headerlink" title="Structs as map keys"></a>Structs as map keys</h4><p>以下是来自 Go 持续构建基础设施的示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> builderRev <span class="keyword">struct</span> &#123;</span><br><span class="line">    builder, rev <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> br = builderRev&#123;<span class="string">&quot;linux-amd64&quot;</span>, <span class="string">&quot;0cd299&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们在一张映射表中跟踪正在执行的构建。pre-Go 1的方法是首先将数据展开为字符串：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">inflight := <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">bool</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">inflight[br.builder + <span class="string">&quot;-&quot;</span> + br.rev] = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>但是，使用结构体键，您可以避免分配并编写更简洁的代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">inflight := <span class="keyword">map</span>[builderRev]<span class="type">bool</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">inflight[br] = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>因为builderRev这个struct可比较</p>
+<h4 id="Interfaces-as-map-keys"><a href="#Interfaces-as-map-keys" class="headerlink" title="Interfaces as map keys"></a>Interfaces as map keys</h4><p>以下是来自 Docker 的 broadcastwriter 包的接口映射键示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> BroadcastWriter <span class="keyword">struct</span> &#123;</span><br><span class="line">    sync.Mutex</span><br><span class="line">    writers <span class="keyword">map</span>[io.WriteCloser]<span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(w *BroadcastWriter)</span></span> AddWriter(writer io.WriteCloser) &#123;</span><br><span class="line">    w.Lock()</span><br><span class="line">    w.writers[writer] = <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">    w.Unlock()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(w *BroadcastWriter)</span></span> Write(p []<span class="type">byte</span>) (n <span class="type">int</span>, err <span class="type">error</span>) &#123;</span><br><span class="line">    w.Lock()</span><br><span class="line">    <span class="keyword">for</span> sw := <span class="keyword">range</span> w.writers &#123;</span><br><span class="line">        <span class="keyword">if</span> n, err := sw.Write(p); err != <span class="literal">nil</span> || n != <span class="built_in">len</span>(p) &#123;</span><br><span class="line">            <span class="built_in">delete</span>(w.writers, sw)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    w.Unlock()</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">len</span>(p), <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Structs-and-interfaces-together-as-map-keys"><a href="#Structs-and-interfaces-together-as-map-keys" class="headerlink" title="Structs and interfaces together as map keys"></a>Structs and interfaces together as map keys</h4><p>一个（非常）人为构造的例子：（永远不要这样做！）</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> cons <span class="keyword">struct</span> &#123;</span><br><span class="line">    car <span class="type">string</span></span><br><span class="line">    cdr <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c cons)</span></span> String() <span class="type">string</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> c.cdr == <span class="literal">nil</span> || c.cdr == (cons&#123;&#125;) &#123;</span><br><span class="line">        <span class="keyword">return</span> c.car</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> fmt.Sprintf(<span class="string">&quot;%v %v&quot;</span>, c.car, c.cdr)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    m := <span class="keyword">map</span>[cons]<span class="type">string</span>&#123;&#125;</span><br><span class="line">    c := cons&#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> _, s := <span class="keyword">range</span> []<span class="type">string</span>&#123;<span class="string">&quot;life?&quot;</span>, <span class="string">&quot;with my&quot;</span>, <span class="string">&quot;I doing&quot;</span>, <span class="string">&quot;What am&quot;</span>&#125; &#123;</span><br><span class="line">        c = cons&#123;s, c&#125; <span class="comment">// 嵌套，其实没啥意义</span></span><br><span class="line">    &#125;</span><br><span class="line">    m[c] = <span class="string">&quot;No idea.&quot;</span></span><br><span class="line">    fmt.Println(c, m[c])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>只是说cons可以作为<em>key</em></p>
+<h2 id="Libraries"><a href="#Libraries" class="headerlink" title="Libraries"></a>Libraries</h2><h4 id="sync-x2F-atomic"><a href="#sync-x2F-atomic" class="headerlink" title="sync&#x2F;atomic"></a>sync&#x2F;atomic</h4><p>对于一个简单的计数器，您可以使用 sync&#x2F;atomic 包的函数进行原子更新，而无需使用锁。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">AddInt64</span><span class="params">(addr *<span class="type">int64</span>, delta <span class="type">int64</span>)</span></span> (<span class="built_in">new</span> <span class="type">int64</span>)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CompareAndSwapInt64</span><span class="params">(addr *<span class="type">int64</span>, old, <span class="built_in">new</span> <span class="type">int64</span>)</span></span> (swapped <span class="type">bool</span>)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">LoadInt64</span><span class="params">(addr *<span class="type">int64</span>)</span></span> (val <span class="type">int64</span>)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">StoreInt64</span><span class="params">(addr *<span class="type">int64</span>, val <span class="type">int64</span>)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SwapInt64</span><span class="params">(addr *<span class="type">int64</span>, <span class="built_in">new</span> <span class="type">int64</span>)</span></span> (old <span class="type">int64</span>)</span><br></pre></td></tr></table></figure>
+
+<p>首先，定义全局变量（适当地进行文档化！）：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// viewCount must be updated atomically.</span></span><br><span class="line"><span class="keyword">var</span> viewCount <span class="type">int64</span></span><br></pre></td></tr></table></figure>
+
+<p>然后使用 <code>AddInt64</code> 对其进行递增：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">count := atomic.AddInt64(&amp;viewCount, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这些函数适用于 <code>Int32</code>、<code>Uint32</code>、<code>Int64</code>、<code>Uint64</code>、<code>Pointer</code> 和 <code>Uintptr</code>。</p>
+<h4 id="sync-x2F-atomic-Value"><a href="#sync-x2F-atomic-Value" class="headerlink" title="sync&#x2F;atomic.Value"></a>sync&#x2F;atomic.Value</h4><p>另一个共享状态的选项是 atomic.Value。</p>
+<p>例如，在多个 <code>goroutine</code> 之间共享配置：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Config <span class="keyword">struct</span> &#123;</span><br><span class="line">    Timeout time.Duration</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> config atomic.Value</span><br></pre></td></tr></table></figure>
+
+<p>要设置或更新，使用 Store 方法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config.Store(&amp;Config&#123;Timeout: <span class="number">2</span>*time.Second&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>要读取，每个 goroutine 调用 Load 方法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cfg := config.Load().(*Config)</span><br></pre></td></tr></table></figure>
+
+<p>注意，在同一个 Value 中存储不同类型的值会导致 panic。</p>
+<h4 id="sync-x2F-atomic-Value-how-it-works"><a href="#sync-x2F-atomic-Value-how-it-works" class="headerlink" title="sync&#x2F;atomic.Value: how it works"></a>sync&#x2F;atomic.Value: how it works</h4><p><code>atomic.Value</code> 原语的大小与单个interface value相同：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> atomic</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Value <span class="keyword">struct</span> &#123;</span><br><span class="line">    v <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个interface value在运行时由两个指针表示：一个指向type，一个指向value。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ifaceWords is interface&#123;&#125; internal representation.</span></span><br><span class="line"><span class="keyword">type</span> ifaceWords <span class="keyword">struct</span> &#123;</span><br><span class="line">    typ  unsafe.Pointer</span><br><span class="line">    data unsafe.Pointer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了原子地加载和存储接口值，它使用 <code>atomic.LoadPointer</code> 和 <code>atomic.StorePointer</code> 操作interface value的各个部分。</p>
+<p>Store 方法首先验证输入：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(v *Value)</span></span> Store(x <span class="keyword">interface</span>&#123;&#125;) &#123;</span><br><span class="line">    <span class="keyword">if</span> x == <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="built_in">panic</span>(<span class="string">&quot;sync/atomic: store of nil value into Value&quot;</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后使用 unsafe 将当前和新的 interface{} 值转换为 <code>ifaceWords</code>(<code>ifaceWords</code> 结构用于表示空接口类型 <code>interface&#123;&#125;</code> 的内部表示)：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">    vp := (*ifaceWords)(unsafe.Pointer(v))</span><br><span class="line">    xp := (*ifaceWords)(unsafe.Pointer(&amp;x))</span><br></pre></td></tr></table></figure>
+
+<p>（<code>unsafe.Pointer</code> 是一种特殊的指针类型，它可以用于实现低级别的内存操作和不安全的类型转换。<code>unsafe.Pointer</code> 提供了一种逃避 Go 语言类型系统的方法，允许你在不同类型的指针之间进行转换，访问底层内存布局，以及执行其他类型安全无法保证的操作。这样我们就可以访问这些 interface 值的内部。）</p>
+<p>在加载type field时进行自旋：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">for</span> &#123;</span><br><span class="line">        typ := LoadPointer(&amp;vp.typ)</span><br></pre></td></tr></table></figure>
+
+<p>如果它是 nil，则这是第一次存储该值。在类型字段中放置一个标记值（max uintptr）以在我们使用它时“锁定”它：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">        <span class="keyword">if</span> typ == <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> !CompareAndSwapPointer(&amp;vp.typ, <span class="literal">nil</span>, unsafe.Pointer(^<span class="type">uintptr</span>(<span class="number">0</span>))) &#123;</span><br><span class="line">                <span class="keyword">continue</span> <span class="comment">// Someone beat us to it. Wait.</span></span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+
+<p>存储数据字段，然后是类型字段，完成！</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">            StorePointer(&amp;vp.data, xp.data)</span><br><span class="line">            StorePointer(&amp;vp.typ, xp.typ)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果这不是第一次存储，请检查是否已经有存储正在进行：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">        <span class="keyword">if</span> <span class="type">uintptr</span>(typ) == ^<span class="type">uintptr</span>(<span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">continue</span> <span class="comment">// First store in progress. Wait.</span></span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>检查类型是否发生了变化：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">        <span class="keyword">if</span> typ != xp.typ &#123;</span><br><span class="line">            <span class="built_in">panic</span>(<span class="string">&quot;sync/atomic: store of inconsistently typed value into Value&quot;</span>)</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果类型字段是我们期望的，那么继续原子地存储该值：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">        StorePointer(&amp;vp.data, xp.data)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Load 方法首先加载接口的类型字段：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(v *Value)</span></span> Load() (x <span class="keyword">interface</span>&#123;&#125;) &#123;</span><br><span class="line">    vp := (*ifaceWords)(unsafe.Pointer(v))</span><br><span class="line">    typ := LoadPointer(&amp;vp.typ)</span><br></pre></td></tr></table></figure>
+
+<p>然后，检查是否已经发生或正在发生存储：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">if</span> typ == <span class="literal">nil</span> || <span class="type">uintptr</span>(typ) == ^<span class="type">uintptr</span>(<span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>否则，加载数据字段并将类型和数据作为新接口值返回：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">    data := LoadPointer(&amp;vp.data)</span><br><span class="line">    xp := (*ifaceWords)(unsafe.Pointer(&amp;x))</span><br><span class="line">    xp.typ = typ</span><br><span class="line">    xp.data = data</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="A-note-on-sync-x2F-atomic"><a href="#A-note-on-sync-x2F-atomic" class="headerlink" title="A note on sync&#x2F;atomic"></a>A note on sync&#x2F;atomic</h4><p>通常您不需要使用此包中的东西。</p>
+<p><strong>首先尝试使用channels 或 sync 包</strong>。</p>
+<p>您几乎肯定不应该编写像 atomic.Value 实现这样的代码。<br>（而且我没有展示全部代码；真正的代码还与运行时有关。）</p>
+<h2 id="Testing"><a href="#Testing" class="headerlink" title="Testing"></a>Testing</h2><h4 id="Subprocess-tests"><a href="#Subprocess-tests" class="headerlink" title="Subprocess tests"></a>Subprocess tests</h4><p>有时您需要测试<strong>进程的行为</strong>，而不仅仅是函数。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Crasher</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">&quot;Going down in flames!&quot;</span>)</span><br><span class="line">    os.Exit(<span class="number">1</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了测试这段代码，我们将测试二进制文件本身作为子进程调用：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestCrasher</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> os.Getenv(<span class="string">&quot;BE_CRASHER&quot;</span>) == <span class="string">&quot;1&quot;</span> &#123;</span><br><span class="line">        Crasher()</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    cmd := exec.Command(os.Args[<span class="number">0</span>], <span class="string">&quot;-test.run=TestCrasher&quot;</span>)</span><br><span class="line">    cmd.Env = <span class="built_in">append</span>(os.Environ(), <span class="string">&quot;BE_CRASHER=1&quot;</span>)</span><br><span class="line">    err := cmd.Run()</span><br><span class="line">    <span class="keyword">if</span> e, ok := err.(*exec.ExitError); ok &amp;&amp; !e.Success() &#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    t.Fatalf(<span class="string">&quot;process ran with err %q, want exit status 1&quot;</span>, err)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="testing"><a href="#testing" class="headerlink" title="testing"></a>testing</h4><p><code>go test</code> 命令会根据以下步骤创建和执行测试二进制文件：</p>
+<ol>
+<li>首先，<code>go test</code> 工具会在包的目录中查找以 <code>_test.go</code> 结尾的测试文件。</li>
+<li>然后，<code>go test</code> 工具会<strong>构建一个包含源代码、测试文件和 <code>testing</code> 包的临时二进制文件</strong>。</li>
+<li>创建测试二进制文件后，<code>go test</code> 工具会运行该文件，执行你的测试用例。</li>
+<li>测试完成后，<code>go test</code> 工具会收集测试结果，并将测试二进制文件从磁盘中删除。</li>
+</ol>
+<p>在之前提到的 <code>TestCrasher</code> 示例中，我们使用 <code>os.Args[0]</code> 引用了<strong>当前测试二进制文件</strong>。<code>os.Args[0]</code> 是一个字符串，表示程序启动时的第一个命令行参数，通常是程序的路径。这里，我们使用 <code>os.Args[0]</code> 创建一个新的 <code>exec.Command</code>，以便在<strong>一个单独的进程</strong>中运行测试函数。这种方法允许我们测试包含 <code>os.Exit</code> 调用的函数，而不影响测试框架的正常运行。</p>
+<h4 id="Subprocess-benchmarks"><a href="#Subprocess-benchmarks" class="headerlink" title="Subprocess benchmarks"></a>Subprocess benchmarks</h4><p>Go的CPU和内存分析器会为<strong>整个进程</strong>报告数据。<br>要仅分析并发操作的一侧，可以使用<strong>子进程</strong>。</p>
+<p>net&#x2F;http包中的此基准测试会生成一个子进程，以向在主进程中运行的服务器发出请求。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">BenchmarkServer</span><span class="params">(b *testing.B)</span></span> &#123;</span><br><span class="line">    b.ReportAllocs()</span><br><span class="line">    <span class="comment">// Child process mode;</span></span><br><span class="line">    <span class="keyword">if</span> url := os.Getenv(<span class="string">&quot;TEST_BENCH_SERVER_URL&quot;</span>); url != <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">        n, err := strconv.Atoi(os.Getenv(<span class="string">&quot;TEST_BENCH_CLIENT_N&quot;</span>))</span><br><span class="line">        <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="built_in">panic</span>(err)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</span><br><span class="line">            res, err := Get(url)</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125;</span><br><span class="line">        os.Exit(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">	res := []<span class="type">byte</span>(<span class="string">&quot;Hello world.\n&quot;</span>)</span><br><span class="line">    ts := httptest.NewServer(HandlerFunc(<span class="function"><span class="keyword">func</span><span class="params">(rw ResponseWriter, r *Request)</span></span> &#123;</span><br><span class="line">        rw.Header().Set(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;text/html; charset=utf-8&quot;</span>)</span><br><span class="line">        rw.Write(res)</span><br><span class="line">    &#125;))</span><br><span class="line">    <span class="keyword">defer</span> ts.Close()</span><br><span class="line"></span><br><span class="line">    cmd := exec.Command(os.Args[<span class="number">0</span>], <span class="string">&quot;-test.run=XXXX&quot;</span>, <span class="string">&quot;-test.bench=BenchmarkServer$&quot;</span>)</span><br><span class="line">    cmd.Env = <span class="built_in">append</span>([]<span class="type">string</span>&#123;</span><br><span class="line">        fmt.Sprintf(<span class="string">&quot;TEST_BENCH_CLIENT_N=%d&quot;</span>, b.N),</span><br><span class="line">        fmt.Sprintf(<span class="string">&quot;TEST_BENCH_SERVER_URL=%s&quot;</span>, ts.URL),</span><br><span class="line">    &#125;, os.Environ()...)</span><br><span class="line">    <span class="keyword">if</span> out, err := cmd.CombinedOutput(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">        b.Errorf(<span class="string">&quot;Test failure: %v, with output: %s&quot;</span>, err, out)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>To run:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">go</span> test -run=XX -bench=BenchmarkServer -benchtime=<span class="number">15</span>s -cpuprofile=http.prof</span><br><span class="line">$ <span class="keyword">go</span> tool pprof http.test http.prof</span><br></pre></td></tr></table></figure>
+
+<h2 id="go-list"><a href="#go-list" class="headerlink" title="go list"></a>go list</h2><h4 id="go-list-1"><a href="#go-list-1" class="headerlink" title="go list"></a>go list</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">go <span class="built_in">help</span> list</span></span><br><span class="line">usage: go list [-e] [-f format] [-json] [build flags] [packages]</span><br><span class="line"></span><br><span class="line">List lists the packages named by the import paths, one per line.</span><br></pre></td></tr></table></figure>
+
+<p>显示路径下的包：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">go list golang.org/x/oauth2/...</span></span><br><span class="line">golang.org/x/oauth2</span><br><span class="line">...</span><br><span class="line">golang.org/x/oauth2/vk</span><br></pre></td></tr></table></figure>
+
+<p>显示标准库：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">go list std</span></span><br><span class="line">archive/tar</span><br><span class="line">...</span><br><span class="line">unsafe</span><br></pre></td></tr></table></figure>
+
+<p>显示所有包：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">go list all</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="go-list-json"><a href="#go-list-json" class="headerlink" title="go list -json"></a>go list -json</h4><p>使用-json标志可以告诉您关于包的所有go工具知道的信息：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ go list -json bytes</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;Dir&quot;</span>: <span class="string">&quot;/Users/adg/go/src/bytes&quot;</span>,</span><br><span class="line">    <span class="string">&quot;ImportPath&quot;</span>: <span class="string">&quot;bytes&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;bytes&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Doc&quot;</span>: <span class="string">&quot;Package bytes implements functions for the manipulation of byte slices.&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Target&quot;</span>: <span class="string">&quot;/Users/adg/go/pkg/darwin_amd64/bytes.a&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Goroot&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="string">&quot;Standard&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="string">&quot;Stale&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="string">&quot;Root&quot;</span>: <span class="string">&quot;/Users/adg/go&quot;</span>,</span><br><span class="line">    <span class="string">&quot;GoFiles&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;buffer.go&quot;</span>,</span><br><span class="line">        <span class="string">&quot;bytes.go&quot;</span>,</span><br><span class="line">        <span class="string">&quot;bytes_decl.go&quot;</span>,</span><br><span class="line">        <span class="string">&quot;reader.go&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>很容易编写可以使用此数据的程序。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tytao.github.io/2023/03/24/Stupid-Gopher-Tricks/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Learning/" rel="tag">Learning</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2023/03/22/Golang-%E6%96%B0%E6%89%8B%E5%8F%AF%E8%83%BD%E4%BC%9A%E8%B8%A9%E7%9A%84-50-%E4%B8%AA%E5%9D%91/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Golang 新手可能会踩的 50 个坑</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.staticfile.org/valine/1.4.16/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "cQtGojRxBjeY7kx4esUCNF0U-gzGzoHsz",
+    app_key: "rvuWgVFgNlhSdSbEz5D8pqHM",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2021-2023
+        <i class="ri-heart-fill heart_icon"></i> TYTaO&#39;s Blog
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="TYTaO&#39;s Blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" target="_blank" rel="noopener" href="http://shenyu-vip.lofter.com">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/%E6%94%AF%E4%BB%98%E5%AE%9D%E6%94%B6%E9%92%B1small.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/%E5%BE%AE%E4%BF%A1%E6%94%B6%E9%92%B1small.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
