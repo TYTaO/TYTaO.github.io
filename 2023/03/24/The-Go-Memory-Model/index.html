@@ -106,7 +106,7 @@
        
   <h1 id="The-Go-Memory-Model"><a href="#The-Go-Memory-Model" class="headerlink" title="The Go Memory Model"></a>The Go Memory Model</h1><p>ref: <a target="_blank" rel="noopener" href="https://pdos.csail.mit.edu/6.824/notes/gomem.pdf">https://pdos.csail.mit.edu/6.824/notes/gomem.pdf</a></p>
 <h2 id="Challenges-of-Go"><a href="#Challenges-of-Go" class="headerlink" title="Challenges of Go"></a>Challenges of Go</h2><ul>
-<li>并发：可扩展的channels（(lock-free?）</li>
+<li>并发：可扩展的channels（lock-free?）</li>
 <li>调度：高效利用硬件，尽管受到操作系统的限制？</li>
 <li>多态性：高效的接口；泛型？</li>
 <li>垃圾收集：控制暂停时间，支持并发，每个 goroutine 单独处理？</li>
@@ -143,7 +143,7 @@
 <li>哪些程序是有效的？我们如何决定？</li>
 <li>这个程序是有效的吗？它是否能够打印 0？</li>
 </ul>
-<img src="../images/image-20230324160400814.png" alt="image-20230324160400814" style="zoom: 67%;" />
+<img src="/images/image-20230324160400814.png" alt="image-20230324160400814" style="zoom: 67%;" />
 
 <p>“这要看情况。”</p>
 <p>在 x86 汇编中，不行。<br>在 ARM&#x2F;POWER 汇编中，可以。<br>在大多数 C 编译器中（即使在 x86 上），可以（或者可能甚至无法完成）。</p>
@@ -173,21 +173,21 @@
 <p>——Lamport，《如何制作一个正确执行多进程程序的多处理器计算机》（1979年）</p>
 </blockquote>
 <p>Can this program print 0?</p>
-<img src="../images/image-20230324160400814.png" alt="image-20230324160400814" style="zoom: 67%;" />
+<img src="/images/image-20230324160400814.png" alt="image-20230324160400814" style="zoom: 67%;" />
 
-<h4 id="测试用例-Message-Passing"><a href="#测试用例-Message-Passing" class="headerlink" title="测试用例: Message Passing"></a>测试用例: Message Passing</h4><img src="../images/image-20230324161109388.png" alt="image-20230324161109388" style="zoom:67%;" />
+<h4 id="测试用例-Message-Passing"><a href="#测试用例-Message-Passing" class="headerlink" title="测试用例: Message Passing"></a>测试用例: Message Passing</h4><img src="/images/image-20230324161109388.png" alt="image-20230324161109388" style="zoom:67%;" />
 
 <p>Can this program see r1 &#x3D; 1, r2 &#x3D; 0?</p>
-<img src="../images/image-20230324161144864.png" alt="image-20230324161144864" style="zoom:67%;" />
+<img src="/images/image-20230324161144864.png" alt="image-20230324161144864" style="zoom:67%;" />
 
 <p>这个程序能看到 r1 &#x3D; 1，r2 &#x3D; 0 吗？<br>在<strong>顺序一致性</strong>的硬件上：不行。（y&#x3D;1在x&#x3D;1之后）</p>
-<h4 id="顺序一致性硬件"><a href="#顺序一致性硬件" class="headerlink" title="顺序一致性硬件"></a>顺序一致性硬件</h4><img src="../images/image-20230324161407073.png" alt="image-20230324161407073" style="zoom:50%;" />
+<h4 id="顺序一致性硬件"><a href="#顺序一致性硬件" class="headerlink" title="顺序一致性硬件"></a>顺序一致性硬件</h4><img src="/images/image-20230324161407073.png" alt="image-20230324161407073" style="zoom:50%;" />
 
-<h4 id="x86-Hardware-Total-Store-Order"><a href="#x86-Hardware-Total-Store-Order" class="headerlink" title="x86 Hardware (Total Store Order)"></a>x86 Hardware (Total Store Order)</h4><img src="../images/image-20230324161433177.png" alt="image-20230324161433177" style="zoom: 67%;" />
+<h4 id="x86-Hardware-Total-Store-Order"><a href="#x86-Hardware-Total-Store-Order" class="headerlink" title="x86 Hardware (Total Store Order)"></a>x86 Hardware (Total Store Order)</h4><img src="/images/image-20230324161433177.png" alt="image-20230324161433177" style="zoom: 67%;" />
 
 <p>在上面的测试用例: Message Passing中，这个程序能看到r1 &#x3D; 1，r2 &#x3D; 0 吗？<br>在x86（或其他TSO）上：不能。</p>
 <p>线程 1 的写入按照原始顺序被其他线程观察到：y&#x3D;1 在 x&#x3D;1 之后。</p>
-<h4 id="测试用例：Store-Buffering"><a href="#测试用例：Store-Buffering" class="headerlink" title="测试用例：Store Buffering"></a>测试用例：Store Buffering</h4><img src="../images/image-20230324162414257.png" alt="image-20230324162414257" style="zoom: 67%;" />
+<h4 id="测试用例：Store-Buffering"><a href="#测试用例：Store-Buffering" class="headerlink" title="测试用例：Store Buffering"></a>测试用例：Store Buffering</h4><img src="/images/image-20230324162414257.png" alt="image-20230324162414257" style="zoom: 67%;" />
 
 <ul>
 <li>这个程序能看到r1 &#x3D; 0，r2 &#x3D; 0 吗？</li>
@@ -195,20 +195,20 @@
 <li>在x86（或其他TSO）上：可以！</li>
 </ul>
 <p>线程1的本地写操作<strong>不会立即在线程2中可见</strong>（反之亦然）。</p>
-<h4 id="内存屏障（Memory-Fences）"><a href="#内存屏障（Memory-Fences）" class="headerlink" title="内存屏障（Memory Fences）"></a>内存屏障（Memory Fences）</h4><img src="../images/image-20230324162858815.png" alt="image-20230324162858815" style="zoom:67%;" />
+<h4 id="内存屏障（Memory-Fences）"><a href="#内存屏障（Memory-Fences）" class="headerlink" title="内存屏障（Memory Fences）"></a>内存屏障（Memory Fences）</h4><img src="/images/image-20230324162858815.png" alt="image-20230324162858815" style="zoom:67%;" />
 
 <p>这个程序能看到r1 &#x3D; 0，r2 &#x3D; 0 吗？不能。<br>内存屏障确保<strong>线程1的写操作在线程1的读操作之前在全局可见</strong>，反之亦然。<br>略过细节。</p>
-<h4 id="测试用例-Independent-Reads-of-Indep-Writes"><a href="#测试用例-Independent-Reads-of-Indep-Writes" class="headerlink" title="测试用例: Independent Reads of Indep. Writes"></a>测试用例: Independent Reads of Indep. Writes</h4><img src="../images/image-20230324163257699.png" alt="image-20230324163257699" style="zoom: 67%;" />
+<h4 id="测试用例-Independent-Reads-of-Indep-Writes"><a href="#测试用例-Independent-Reads-of-Indep-Writes" class="headerlink" title="测试用例: Independent Reads of Indep. Writes"></a>测试用例: Independent Reads of Indep. Writes</h4><img src="/images/image-20230324163257699.png" alt="image-20230324163257699" style="zoom: 67%;" />
 
 <p>这个程序能看到r1 &#x3D; 1，r2 &#x3D; 0，r3 &#x3D; 1，r4 &#x3D; 0 吗？<br>线程3能在线程4之前看到x的改变，但线程4能看到y的改变比线程3更早吗？</p>
 <p>在顺序一致的硬件上：不能。<br>在x86（或其他TSO）上：不能。<br><strong>所有对主内存的存储操作都有一个总序</strong>。</p>
-<h4 id="ARM-x2F-POWER-Hardware"><a href="#ARM-x2F-POWER-Hardware" class="headerlink" title="ARM&#x2F;POWER Hardware"></a>ARM&#x2F;POWER Hardware</h4><img src="../images/image-20230324163702002.png" alt="image-20230324163702002" style="zoom:67%;" />
+<h4 id="ARM-x2F-POWER-Hardware"><a href="#ARM-x2F-POWER-Hardware" class="headerlink" title="ARM&#x2F;POWER Hardware"></a>ARM&#x2F;POWER Hardware</h4><img src="/images/image-20230324163702002.png" alt="image-20230324163702002" style="zoom:67%;" />
 
 <p>对于上面的测试用例:Message Passing</p>
-<img src="../images/image-20230324161109388.png" alt="image-20230324161109388" style="zoom:67%;" />
+<img src="/images/image-20230324161109388.png" alt="image-20230324161109388" style="zoom:67%;" />
 
 <p>这个程序能看到r1 &#x3D; 1，r2 &#x3D; 0 吗？<br>在x86（或其他TSO）上：不能。<br>在ARM&#x2F;POWER上：可以！<br><strong>线程1的写操作可能不会按照原始顺序被其他线程观察到。</strong></p>
-<img src="../images/image-20230324163257699.png" alt="image-20230324163257699" style="zoom: 67%;" />
+<img src="/images/image-20230324163257699.png" alt="image-20230324163257699" style="zoom: 67%;" />
 
 <p>这个程序能看到r1 &#x3D; 1，r2 &#x3D; 0，r3 &#x3D; 1，r4 &#x3D; 0 吗？<br>（线程3能在线程4之前看到x的改变，但线程4能看到y的改变比线程3更早吗？）<br>在顺序一致的硬件上：不能。<br>在x86（或其他TSO）上：不能。<br>在ARM&#x2F;POWER上：可以！<br><strong>不同的线程可能以不同的顺序接收到不同的写入操作。</strong></p>
 <h4 id="弱序（Weak-Ordering）"><a href="#弱序（Weak-Ordering）" class="headerlink" title="弱序（Weak Ordering）"></a>弱序（Weak Ordering）</h4><blockquote>
@@ -244,7 +244,7 @@
 <li><strong>终结器规则</strong>：一个对象的初始化完成 Happens-Before 该对象的终结器（finalizer）被调用。这意味着在对象被回收之前，对象的所有操作都将完成。</li>
 <li><strong>传递性规则</strong>：如果操作 A Happens-Before 操作 B，且操作 B Happens-Before 操作 C，那么操作 A Happens-Before 操作 C。这条规则表明 Happens-Before 是传递性的。</li>
 </ol>
-<h2 id="Go-Memory-Model"><a href="#Go-Memory-Model" class="headerlink" title="Go Memory Model"></a>Go Memory Model</h2><p><img src="/../images/image-20230324171051088.png" alt="image-20230324171051088"></p>
+<h2 id="Go-Memory-Model"><a href="#Go-Memory-Model" class="headerlink" title="Go Memory Model"></a>Go Memory Model</h2><p><img src="/images/image-20230324171051088.png" alt="image-20230324171051088"></p>
 <h4 id="Go-Memory-Model-1"><a href="#Go-Memory-Model-1" class="headerlink" title="Go Memory Model"></a>Go Memory Model</h4><p>两个目的：</p>
 <ul>
 <li>为程序员提供保证。</li>
