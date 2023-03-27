@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>Kubernetes 的基本架构 &amp;&amp; 容器调度的基本流程 |  TYTaO&#39;s Blog</title>
+      <title>Kubernetes 的基本架构(1) |  TYTaO&#39;s Blog</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/favicon.ico" />
@@ -64,7 +64,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Kubernetes 的基本架构 &amp;&amp; 容器调度的基本流程
+  Kubernetes 的基本架构(1)
 </h1>
  
 
@@ -80,7 +80,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">2.3k</span>
+            <span class="post-count">5.6k</span>
         </span>
     </span>
 
@@ -89,7 +89,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">8 min</span>
+            <span class="post-count">20 min</span>
         </span>
     </span>
 </div>
@@ -104,19 +104,25 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="Kubernetes-的基本架构"><a href="#Kubernetes-的基本架构" class="headerlink" title="Kubernetes 的基本架构"></a>Kubernetes 的基本架构</h2><h4 id="Master"><a href="#Master" class="headerlink" title="Master"></a>Master</h4><p>Kubernetes集群中的master节点是集群的控制节点， 负责整个集群的管理和控制。<strong>执行的控制命令都是发送给master节点</strong>。 Master节点上运行的主要组件如下：</p>
+  <h1 id="Kubernetes-的基本架构"><a href="#Kubernetes-的基本架构" class="headerlink" title="Kubernetes 的基本架构"></a>Kubernetes 的基本架构</h1><h2 id="Master"><a href="#Master" class="headerlink" title="Master"></a>Master</h2><p>Kubernetes集群中的master节点是集群的控制节点， 负责整个集群的管理和控制。<strong>执行的控制命令都是发送给master节点</strong>。 Master节点上运行的主要组件如下：</p>
 <ul>
 <li><a href="">kube-apiserver</a>  apiserver提供了<strong>资源操作的唯一入口</strong>， 并提供<strong>认证、授权、访问控制、API注册和发现机制</strong>。</li>
 <li><a href="">Kube-controller-manager</a>  Controller Manager作为集群内部的管理控制中心，负责集群内的Node、Pod副本、服务端点（Endpoint）、命名空间（Namespace）、服务账号（ServiceAccount）、资源定额（ResourceQuota）的管理，当某个Node意外宕机时，<strong>Controller Manager会及时发现并执行自动化修复流程，确保集群始终处于预期的工作状态</strong>。</li>
 <li><a href="">kube-scheduler</a>  资源调度负责决定将Pod调度到合适的node上。</li>
 </ul>
-<h4 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h4><p>Node节点时kubernetes集群中的工作负载节点，Node上的工作负载由master分配， 当某个Node宕机时，Master会将上面的工作负载转移到其他节点上去， Node节点上运行的主要组件如下：</p>
+<h2 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h2><p>Node节点时kubernetes集群中的工作负载节点，Node上的工作负载由master分配， 当某个Node宕机时，Master会将上面的工作负载转移到其他节点上去， Node节点上运行的主要组件如下：</p>
 <ul>
 <li><a href="">kubelet</a>  负责<strong>pod的创建、启动、监控、重启、销毁</strong>等工作， 同时也负责Volume(CVI)和网络(CNI)的管理</li>
 <li><a href="">kube-proxy</a> 负责<strong>为Service提供cluster内部的服务发现和负载均衡</strong>；</li>
 <li><a href="">container runtime</a>负责<strong>镜像管理</strong>以及Pod和<strong>容器的真正运行(CRI)</strong>;</li>
 </ul>
-<h4 id="节点通信"><a href="#节点通信" class="headerlink" title="节点通信"></a>节点通信</h4><p><img src="/images/image-20230326210631920.png" alt="image-20230326210631920"></p>
+<h4 id="管理"><a href="#管理" class="headerlink" title="管理"></a>管理</h4><p>向 <a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/overview/components/#kube-apiserver">API 服务器</a>添加节点的方式主要有两种：</p>
+<ol>
+<li>节点上的 <code>kubelet</code> 向控制面执行自注册；</li>
+<li>你（或者别的什么人）手动添加一个 Node 对象。</li>
+</ol>
+<h4 id="节点名称唯一性"><a href="#节点名称唯一性" class="headerlink" title="节点名称唯一性"></a>节点名称唯一性</h4><p>节点的<a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/overview/working-with-objects/names#names">名称</a>用来标识 Node 对象。 没有两个 Node 可以同时使用相同的名称。如果某个 Node 需要被替换或者大量变更，需要从 API 服务器移除现有的 Node 对象， 之后再在更新之后重新将其加入。</p>
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><h2 id="节点通信"><a href="#节点通信" class="headerlink" title="节点通信"></a>节点通信</h2><p><img src="/images/image-20230326210631920.png" alt="image-20230326210631920"></p>
 <p>上图为kubernetes中所有组件一起工作时的示意图，由此我们可以得出以下几个通信流程，</p>
 <ul>
 <li>API Server 负责 etcd 存储的所有操作，且只有 API Server 才直接操作 etcd 集群</li>
@@ -135,7 +141,7 @@
 <li>状态转移：RESTful API通过HTTP协议提供了一组标准的操作，包括GET、POST、PUT、DELETE等，这些操作可以对资源进行状态转移。</li>
 </ol>
 </blockquote>
-<h4 id="创建Pod的流程"><a href="#创建Pod的流程" class="headerlink" title="创建Pod的流程"></a>创建Pod的流程</h4><p><img src="/images/image-20230326213549403.png" alt="image-20230326213549403"></p>
+<h2 id="创建Pod的流程"><a href="#创建Pod的流程" class="headerlink" title="创建Pod的流程"></a>创建Pod的流程</h2><p><img src="/images/image-20230326213549403.png" alt="image-20230326213549403"></p>
 <ol>
 <li>用户通过 REST API 创建一个 Pod。</li>
 <li>API服务器接收到请求后，进行权限验证和数据校验。如果请求通过验证，API服务器将Pod资源存储在etcd中。</li>
@@ -144,7 +150,7 @@
 <li>Container Runtime（如Docker）下载镜像并启动容器：kubelet会与容器运行时（如Docker）协作，完成容器镜像的拉取和容器的启动。</li>
 <li>Kubelet 通过 Container Runtime 取到 Pod 状态，并更新到 API Server 中</li>
 </ol>
-<h2 id="Master组件"><a href="#Master组件" class="headerlink" title="Master组件"></a>Master组件</h2><h4 id="API-Server"><a href="#API-Server" class="headerlink" title="API Server"></a>API Server</h4><p>kube-apiserver 是 Kubernetes 最重要的核心组件之一，主要提供以下的功能：</p>
+<h1 id="Master组件"><a href="#Master组件" class="headerlink" title="Master组件"></a>Master组件</h1><h2 id="API-Server"><a href="#API-Server" class="headerlink" title="API Server"></a>API Server</h2><p>kube-apiserver 是 Kubernetes 最重要的核心组件之一，主要提供以下的功能：</p>
 <ul>
 <li>提供集群管理的 REST API 接口，包括认证、授权、数据校验以及集群状态变更等</li>
 <li>提供其他模块之间的数据交互和通信的枢纽（其他模块通过 API Server 查询或修改数据，<strong>只有 API Server 才直接操作 etcd</strong>）</li>
@@ -188,6 +194,77 @@
 <h6 id="授权"><a href="#授权" class="headerlink" title="授权"></a>授权</h6><p>认证之后的请求就到了授权模块。跟认证类似，Kubernetes 也支持多种授权机制，并支持同时开启多个授权插件（只要有一个验证通过即可）。如果授权成功，则用户的请求会发送到准入控制模块做进一步的请求验证；而对于授权失败的请求则返回 HTTP 403.</p>
 <h6 id="准入控制"><a href="#准入控制" class="headerlink" title="准入控制"></a>准入控制</h6><p>准入控制（Admission Control）用来对请求做进一步的验证或添加默认参数。<strong>不同于授权和认证只关心请求的用户和操作，准入控制还处理请求的内容</strong>，并且仅对创建、更新、删除或连接（如代理）等有效，而对读操作无效。准入控制也支持同时开启多个插件，它们依次调用，<strong>只有全部插件都通过的请求</strong>才可以放过进入系统。</p>
 <p><img src="https://4130827217-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-LDAOok5ngY4pc1lEDes-887967055%2Fuploads%2Fgit-blob-ea68fcbe0a2cf2f2a3633343dce0c375b5b20caa%2Fkube-apiserver.png?alt=media" alt="img"></p>
+<h2 id="Etcd"><a href="#Etcd" class="headerlink" title="Etcd"></a><a target="_blank" rel="noopener" href="https://etcd.io/docs">Etcd</a></h2><p>Etcd 是 CoreOS 基于 Raft 开发的分布式 key-value 存储系统，可用于元数据管理、服务发现、共享配置以及一致性保障（如领导选举、分布式锁等）。</p>
+<p>在Kubernetes中，Etcd起着至关重要的作用，主要功能如下：</p>
+<ol>
+<li><strong>存储</strong>集群数据：Kubernetes使用Etcd作为集群的数据后端，存储Kubernetes的所有资源对象（如Pods、Services、Deployments等）的状态和配置信息。API Server与Etcd进行通信，读取和写入数据。</li>
+<li>确保<strong>数据一致性</strong>：Etcd通过Raft一致性算法确保分布式环境下的数据一致性，这对于Kubernetes集群的稳定运行非常重要。API Server可以从任何一个Etcd节点读取数据，但只有集群中的领导者节点（Leader）才能处理写请求。其他节点（Follower）会将写请求转发给领导者节点。</li>
+<li><strong>高可用</strong>性：Kubernetes可以部署多个Etcd实例，形成一个Etcd集群，确保数据的高可用性。当部分Etcd节点发生故障时，集群仍能正常工作。这对于Kubernetes集群的稳定运行至关重要。</li>
+<li>支持<strong>监听事件</strong>：Etcd支持监听特定键的变化，这对于Kubernetes中的控制器和调度器等组件来说非常有用。<strong>当资源对象发生变化时，Etcd会通知相关的组件，使它们能够对变化作出响应</strong>。</li>
+<li><strong>服务发现</strong>：虽然Kubernetes主要依赖其内部的服务发现机制，但Etcd也可以用于服务发现。通过在Etcd中存储服务信息，客户端可以查询Etcd获取服务的位置和配置。</li>
+</ol>
+<p>总之，Etcd在Kubernetes中扮演着关键的角色，作为集群数据的<strong>核心存储</strong>系统，确保<strong>数据的一致性、可用性和安全性</strong>。Kubernetes的各个组件都<strong>依赖Etcd进行通信和协调</strong>。</p>
+<h2 id="Controller-Manager"><a href="#Controller-Manager" class="headerlink" title="Controller Manager"></a>Controller Manager</h2><h4 id="控制器模式"><a href="#控制器模式" class="headerlink" title="控制器模式"></a>控制器模式</h4><p>一个控制器<strong>至少追踪一种类型的 Kubernetes 资源</strong>。这些 <a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/overview/working-with-objects/kubernetes-objects/#kubernetes-objects">对象</a> 有一个代表期望状态的 <code>spec</code> 字段。 该资源的控制器负责确保其当前状态接近期望状态。</p>
+<p>控制器可能会自行执行操作；在 Kubernetes 中更常见的是一个控制器会发送信息给 <a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/overview/components/#kube-apiserver">API 服务器</a>，这会有副作用。 具体可参看后文的例子。</p>
+<h6 id="通过-API-服务器来控制"><a href="#通过-API-服务器来控制" class="headerlink" title="通过 API 服务器来控制"></a>通过 API 服务器来控制</h6><p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/workloads/controllers/job/">Job</a> 控制器是一个 Kubernetes 内置控制器的例子。 内置控制器通过和集群 API 服务器交互来管理状态。</p>
+<p>Job 是一种 Kubernetes 资源，它运行一个或者多个 <a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/workloads/pods/">Pod</a>， 来执行一个任务然后停止。 （一旦<a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/scheduling-eviction/">被调度了</a>，对 <code>kubelet</code> 来说 Pod 对象就会变成了期望状态的一部分）。</p>
+<p>在集群中，当 Job 控制器拿到新任务时，它会保证一组 Node 节点上的 <code>kubelet</code> 可以运行正确数量的 Pod 来完成工作。 Job 控制器不会自己运行任何的 Pod 或者容器。<strong>Job 控制器是通知 API 服务器来创建或者移除 Pod</strong>。 <a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/reference/glossary/?all=true#term-control-plane">控制面</a>中的其它组件 根据新的消息作出反应（调度并运行新 Pod）并且最终完成工作。</p>
+<p>创建新 Job 后，<strong>所期望的状态就是完成这个 Job</strong>。Job 控制器会让 Job 的当前状态不断接近期望状态：创建为 Job 要完成工作所需要的 Pod，使 Job 的状态接近完成。</p>
+<p><strong>控制器也会更新配置对象</strong>。例如：一旦 Job 的工作完成了，Job 控制器会更新 Job 对象的状态为 <code>Finished</code>。</p>
+<p>（这有点像温度自动调节器关闭了一个灯，以此来告诉你房间的温度现在到你设定的值了）。</p>
+<img src="../images/image-20230327154957600.png" alt="image-20230327154957600" style="zoom:50%;" />
+
+<h6 id="直接控制"><a href="#直接控制" class="headerlink" title="直接控制"></a>直接控制</h6><p>相比 Job 控制器，有些控制器需要<strong>对集群外的一些东西进行修改</strong>。</p>
+<p>例如，如果你使用一个控制回路来保证集群中有足够的 <a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/architecture/nodes/">节点</a>，那么控制器就<strong>需要当前集群外的 一些服务在需要时创建新节点</strong>。</p>
+<p>和外部状态交互的控制器从 API 服务器获取到它想要的状态，然后直接和外部系统进行通信 并使当前状态更接近期望状态。</p>
+<p>（实际上有一个<a target="_blank" rel="noopener" href="https://github.com/kubernetes/autoscaler/">控制器</a> 可以水平地扩展集群中的节点。）</p>
+<p>这里的重点是，<strong>控制器做出了一些变更以使得事物更接近你的期望状态， 之后将当前状态报告给集群的 API 服务器。</strong> 其他控制回路可以观测到所汇报的数据的这种变化并采取其各自的行动。</p>
+<p>在温度计的例子中，如果房间很冷，那么某个控制器可能还会启动一个防冻加热器。 就 Kubernetes 集群而言，控制面间接地与 IP 地址管理工具、存储服务、云驱动 APIs 以及其他服务协作，通过<a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/extend-kubernetes/">扩展 Kubernetes</a> 来实现这点。</p>
+<h4 id="期望状态与当前状态"><a href="#期望状态与当前状态" class="headerlink" title="期望状态与当前状态"></a>期望状态与当前状态</h4><p>Kubernetes 采用了系统的云原生视图，并且可以处理持续的变化。</p>
+<p>在任务执行时，集群随时都可能被修改，并且控制回路会自动修复故障。 这意味着很可能集群永远不会达到稳定状态。</p>
+<p><strong>只要集群中的控制器在运行并且进行有效的修改，整体状态的稳定与否是无关紧要的</strong>。</p>
+<h4 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h4><p>作为设计原则之一，Kubernetes 使用了很多控制器，每个控制器管理集群状态的一个特定方面。 最常见的一个特定的控制器使用一种类型的资源作为它的期望状态， 控制器管理控制另外一种类型的资源向它的期望状态演化。 例如，Job 的控制器跟踪 Job 对象（以发现新的任务）和 Pod 对象（以运行 Job，然后查看任务何时完成）。 在这种情况下，新任务会创建 Job，而 Job 控制器会创建 Pod。</p>
+<p><strong>使用简单的控制器而不是一组相互连接的单体控制回路是很有用的</strong>。 控制器会失败，所以 Kubernetes 的设计正是考虑到了这一点。</p>
+<blockquote>
+<p><strong>说明：</strong></p>
+<p>可以有多个控制器来创建或者更新相同类型的对象。 在后台，Kubernetes 控制器确保它们只关心与其控制资源相关联的资源。</p>
+<p>例如，你可以创建 Deployment 和 Job；它们都可以创建 Pod。 Job 控制器不会删除 Deployment 所创建的 Pod，因为有<strong>信息 （<a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/overview/working-with-objects/labels/">标签</a>）让控制器可以区分这些 Pod。</strong></p>
+</blockquote>
+<h4 id="运行控制器的方式"><a href="#运行控制器的方式" class="headerlink" title="运行控制器的方式"></a>运行控制器的方式</h4><p>Kubernetes <strong>内置一组控制器，运行在 <a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/reference/command-line-tools-reference/kube-controller-manager/">kube-controller-manager</a> 内</strong>。 这些内置的控制器提供了重要的核心功能。</p>
+<p>Deployment 控制器和 Job 控制器是 Kubernetes 内置控制器的典型例子。 Kubernetes 允许你运行一个稳定的控制平面，这样即使某些内置控制器失败了， 控制平面的其他部分会接替它们的工作。</p>
+<p>你会遇到某些控制器运行在控制面之外，用以扩展 Kubernetes。 或者，如果你愿意，你也可以自己编写新控制器。 你<strong>可以以一组 Pod 来运行你的控制器，或者运行在 Kubernetes 之外。 最合适的方案取决于控制器所要执行的功能是什么。</strong></p>
+<h4 id="控制器的原理"><a href="#控制器的原理" class="headerlink" title="控制器的原理"></a>控制器的原理</h4><img src="../images/image-20230327160608125.png" alt="image-20230327160608125" style="zoom:50%;" />
+
+<ul>
+<li>观察：通过监控Kubernetes资源对象变化的事件来获取当前对象状态，我们只需要注入EventHandler让client-go将变化的事件对象信息放入WorkQueue中。</li>
+<li>分析：确定当前状态和期望状态的不同，由Worker完成。</li>
+<li>执行：执行能够驱动对象当前状态变化的操作，由Worker完成。</li>
+<li>更新：更新对象的当前状态，由Worker完成。</li>
+</ul>
+<h4 id="List-Watch-的基本原理"><a href="#List-Watch-的基本原理" class="headerlink" title="List-Watch 的基本原理"></a>List-Watch 的基本原理</h4><p>List-Watch是k8s统一的异步消息处理机制，在k8s内部的消息通信中，如何保障消息的实时性，客户端（kubelet，kube-scheduler…）轮询apiserver，或者apiserver主动通知客户端。如果轮询，大量的worker节点轮询apiserver，压力太大，而且实时性差；如果apiserver主动发送http请求，apiserver如何保障消息准确送达，而且这种短时连接势必造成socket通信接口频繁创建销毁，服务器压力骤升。</p>
+<p>List-Watch就是为了解决k8s内部通信，在整个k8s内部集群中，etcd负责存储集群数据信息，apiserver作为统一的入口，任何数据都必须经过apiserver。客户端通过list-watch监听apiserver中资源kind的create，update，delete事件，并针对事件类型调用相应的事件处理函数处理，这就形成了整个k8s中的消息发布订阅过程了。</p>
+<p>那么List-Watch到底是什么，List-Watch是两部分API，分别是list和watch。<strong>list的api非常好理解，就是列出资源；而watch则是调用资源的watch接口监听资源的变更事件。</strong></p>
+<h6 id="Informer"><a href="#Informer" class="headerlink" title="Informer"></a>Informer</h6><p>k8s的informer模块封装了list-watch的API，用户只需要指定资源，编写事件处理函数，如AddFunc,UpdateFunc,DeleteFunc等。informer首先通过list API罗列出资源，然后调用watch API监听资源的变更事件，并将结果放入到一个FIFO队列，队列的另一头有协程从中取出事件，并调用对应的注册函数处理事件。</p>
+<h2 id="Scheduler"><a href="#Scheduler" class="headerlink" title="Scheduler"></a><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/scheduling/kube-scheduler/">Scheduler</a></h2><p>在 Kubernetes 中，<strong>调度</strong> 是指将 <a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/workloads/pods/">Pod</a> 放置到合适的<a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/architecture/nodes/">节点</a>上，以便对应节点上的 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/generated/kubelet">Kubelet</a> 能够运行这些 Pod。</p>
+<h4 id="调度概览"><a href="#调度概览" class="headerlink" title="调度概览"></a>调度概览</h4><p>调度器通过 Kubernetes 的监测（Watch）机制来发现集群中新创建且<strong>尚未被调度到节点上</strong>的 Pod。 调度器会将所发现的每一个未调度的 Pod 调度到一个合适的节点上来运行。 调度器会依据下文的调度原则来做出调度选择。</p>
+<h4 id="kube-scheduler"><a href="#kube-scheduler" class="headerlink" title="kube-scheduler"></a>kube-scheduler</h4><p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/reference/command-line-tools-reference/kube-scheduler/">kube-scheduler</a> 是 Kubernetes 集群的默认调度器，并且是集群 <a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/reference/glossary/?all=true#term-control-plane">控制面</a> 的一部分。 如果你真得希望或者有这方面的需求，kube-scheduler 在设计上允许你自己编写一个调度组件并替换原有的 kube-scheduler。</p>
+<p>Kube-scheduler 选择一个最佳节点来运行新创建的或尚未调度（unscheduled）的 Pod。 <strong>由于 Pod 中的容器和 Pod 本身可能有不同的要求，调度程序会过滤掉任何不满足 Pod 特定调度需求的节点</strong>。 或者，API 允许你在创建 Pod 时为它指定一个节点，但这并不常见，并且仅在特殊情况下才会这样做。</p>
+<p>在一个集群中，满足一个 Pod 调度请求的所有节点称之为 <strong>可调度节点</strong>。 如果没有任何一个节点能满足 Pod 的资源请求， 那么这个 Pod 将一直停留在未调度状态直到调度器能够找到合适的 Node。</p>
+<p><strong>调度器先在集群中找到一个 Pod 的所有可调度节点，然后根据一系列函数对这些可调度节点打分， 选出其中得分最高的节点来运行 Pod。之后，调度器将这个调度决定通知给 kube-apiserver，这个过程叫做 绑定。</strong></p>
+<p>在做调度决定时需要考虑的因素包括：<strong>单独和整体的资源请求、硬件&#x2F;软件&#x2F;策略限制、 亲和以及反亲和要求、数据局部性、负载间的干扰等等。</strong></p>
+<h4 id="kube-scheduler-中的节点选择"><a href="#kube-scheduler-中的节点选择" class="headerlink" title="kube-scheduler 中的节点选择"></a>kube-scheduler 中的节点选择</h4><p>kube-scheduler 给一个 Pod 做调度选择时包含两个步骤：</p>
+<ol>
+<li>过滤</li>
+<li>打分</li>
+</ol>
+<p>过滤阶段会<strong>将所有满足 Pod 调度需求的节点选出来</strong>。 例如，PodFitsResources 过滤函数会检查候选节点的可用资源能否满足 Pod 的资源请求。 在过滤之后，得出一个节点列表，里面包含了所有可调度节点；通常情况下， 这个节点列表包含不止一个节点。如果这个列表是空的，代表这个 Pod 不可调度。</p>
+<p>在打分阶段，调度器会为 Pod 从所有可调度节点中<strong>选取一个最合适的节点</strong>。 根据当前启用的打分规则，调度器会给每一个可调度节点进行打分。</p>
+<p>最后，kube-scheduler 会将 Pod 调度到得分最高的节点上。 如果存在多个得分最高的节点，kube-scheduler 会从中随机选取一个。</p>
+<p>支持以下两种方式配置调度器的过滤和打分行为：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/reference/scheduling/policies">调度策略</a> 允许你配置过滤所用的 <strong>断言（Predicates）</strong> 和打分所用的 <strong>优先级（Priorities）</strong>。</li>
+<li><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/reference/scheduling/config/#profiles">调度配置</a> 允许你配置实现不同调度阶段的插件， 包括：<code>QueueSort</code>、<code>Filter</code>、<code>Score</code>、<code>Bind</code>、<code>Reserve</code>、<code>Permit</code> 等等。 你也可以配置 kube-scheduler 运行不同的配置文件。</li>
+</ol>
  
       <!-- reward -->
       
