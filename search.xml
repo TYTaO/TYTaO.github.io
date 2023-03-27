@@ -1735,7 +1735,7 @@
 <p>创建新 Job 后，<strong>所期望的状态就是完成这个 Job</strong>。Job 控制器会让 Job 的当前状态不断接近期望状态：创建为 Job 要完成工作所需要的 Pod，使 Job 的状态接近完成。</p>
 <p><strong>控制器也会更新配置对象</strong>。例如：一旦 Job 的工作完成了，Job 控制器会更新 Job 对象的状态为 <code>Finished</code>。</p>
 <p>（这有点像温度自动调节器关闭了一个灯，以此来告诉你房间的温度现在到你设定的值了）。</p>
-<img src="../images/image-20230327154957600.png" alt="image-20230327154957600" style="zoom:50%;" />
+<img src="/images/image-20230327154957600.png" alt="image-20230327154957600" style="zoom:50%;" />
 
 <h6 id="直接控制"><a href="#直接控制" class="headerlink" title="直接控制"></a>直接控制</h6><p>相比 Job 控制器，有些控制器需要<strong>对集群外的一些东西进行修改</strong>。</p>
 <p>例如，如果你使用一个控制回路来保证集群中有足够的 <a href="https://kubernetes.io/zh-cn/docs/concepts/architecture/nodes/">节点</a>，那么控制器就<strong>需要当前集群外的 一些服务在需要时创建新节点</strong>。</p>
@@ -1756,7 +1756,7 @@
 <h4 id="运行控制器的方式"><a href="#运行控制器的方式" class="headerlink" title="运行控制器的方式"></a>运行控制器的方式</h4><p>Kubernetes <strong>内置一组控制器，运行在 <a href="https://kubernetes.io/zh-cn/docs/reference/command-line-tools-reference/kube-controller-manager/">kube-controller-manager</a> 内</strong>。 这些内置的控制器提供了重要的核心功能。</p>
 <p>Deployment 控制器和 Job 控制器是 Kubernetes 内置控制器的典型例子。 Kubernetes 允许你运行一个稳定的控制平面，这样即使某些内置控制器失败了， 控制平面的其他部分会接替它们的工作。</p>
 <p>你会遇到某些控制器运行在控制面之外，用以扩展 Kubernetes。 或者，如果你愿意，你也可以自己编写新控制器。 你<strong>可以以一组 Pod 来运行你的控制器，或者运行在 Kubernetes 之外。 最合适的方案取决于控制器所要执行的功能是什么。</strong></p>
-<h4 id="控制器的原理"><a href="#控制器的原理" class="headerlink" title="控制器的原理"></a>控制器的原理</h4><img src="../images/image-20230327160608125.png" alt="image-20230327160608125" style="zoom:50%;" />
+<h4 id="控制器的原理"><a href="#控制器的原理" class="headerlink" title="控制器的原理"></a>控制器的原理</h4><img src="/images/image-20230327160608125.png" alt="image-20230327160608125" style="zoom:50%;" />
 
 <ul>
 <li>观察：通过监控Kubernetes资源对象变化的事件来获取当前对象状态，我们只需要注入EventHandler让client-go将变化的事件对象信息放入WorkQueue中。</li>
