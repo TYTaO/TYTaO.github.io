@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>Useful Blog |  TYTaO&#39;s Blog</title>
+      <title>Kubernetes 的基本架构 &amp;&amp; 容器调度的基本流程 |  TYTaO&#39;s Blog</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/favicon.ico" />
@@ -53,7 +53,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-Useful-Blog"
+  id="post-Kubernetes-的基本架构-容器调度的基本流程"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -64,7 +64,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Useful Blog
+  Kubernetes 的基本架构 &amp;&amp; 容器调度的基本流程
 </h1>
  
 
@@ -72,19 +72,15 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/03/19/Useful-Blog/" class="article-date">
-  <time datetime="2023-03-19T06:37:47.000Z" itemprop="datePublished">2023-03-19</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Tools/">Tools</a>
-  </div>
-  
+      <a href="/2023/03/24/Kubernetes-%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84-%E5%AE%B9%E5%99%A8%E8%B0%83%E5%BA%A6%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B/" class="article-date">
+  <time datetime="2023-03-24T11:10:46.000Z" itemprop="datePublished">2023-03-24</time>
+</a>   
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">4</span>
+            <span class="post-count">2.3k</span>
         </span>
     </span>
 
@@ -93,31 +89,105 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">1 min</span>
+            <span class="post-count">8 min</span>
         </span>
     </span>
 </div>
  
     </div>
       
+    <div class="tocbot"></div>
+
 
 
 
   
     <div class="article-entry" itemprop="articleBody">
        
-  <table>
-<thead>
-<tr>
-<th>地址</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
+  <h2 id="Kubernetes-的基本架构"><a href="#Kubernetes-的基本架构" class="headerlink" title="Kubernetes 的基本架构"></a>Kubernetes 的基本架构</h2><h4 id="Master"><a href="#Master" class="headerlink" title="Master"></a>Master</h4><p>Kubernetes集群中的master节点是集群的控制节点， 负责整个集群的管理和控制。<strong>执行的控制命令都是发送给master节点</strong>。 Master节点上运行的主要组件如下：</p>
+<ul>
+<li><a href="">kube-apiserver</a>  apiserver提供了<strong>资源操作的唯一入口</strong>， 并提供<strong>认证、授权、访问控制、API注册和发现机制</strong>。</li>
+<li><a href="">Kube-controller-manager</a>  Controller Manager作为集群内部的管理控制中心，负责集群内的Node、Pod副本、服务端点（Endpoint）、命名空间（Namespace）、服务账号（ServiceAccount）、资源定额（ResourceQuota）的管理，当某个Node意外宕机时，<strong>Controller Manager会及时发现并执行自动化修复流程，确保集群始终处于预期的工作状态</strong>。</li>
+<li><a href="">kube-scheduler</a>  资源调度负责决定将Pod调度到合适的node上。</li>
+</ul>
+<h4 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h4><p>Node节点时kubernetes集群中的工作负载节点，Node上的工作负载由master分配， 当某个Node宕机时，Master会将上面的工作负载转移到其他节点上去， Node节点上运行的主要组件如下：</p>
+<ul>
+<li><a href="">kubelet</a>  负责<strong>pod的创建、启动、监控、重启、销毁</strong>等工作， 同时也负责Volume(CVI)和网络(CNI)的管理</li>
+<li><a href="">kube-proxy</a> 负责<strong>为Service提供cluster内部的服务发现和负载均衡</strong>；</li>
+<li><a href="">container runtime</a>负责<strong>镜像管理</strong>以及Pod和<strong>容器的真正运行(CRI)</strong>;</li>
+</ul>
+<h4 id="节点通信"><a href="#节点通信" class="headerlink" title="节点通信"></a>节点通信</h4><p><img src="/images/image-20230326210631920.png" alt="image-20230326210631920"></p>
+<p>上图为kubernetes中所有组件一起工作时的示意图，由此我们可以得出以下几个通信流程，</p>
+<ul>
+<li>API Server 负责 etcd 存储的所有操作，且只有 API Server 才直接操作 etcd 集群</li>
+<li>API Server 对内（集群中的其他组件）和对外（用户）<strong>提供统一的 REST API</strong>，其他组件均通过 API Server 进行通信<ul>
+<li>Controller Manager、Scheduler、Kube-proxy 和 Kubelet 等均通过 <strong>API Server watch API 监测资源变化情况，并对资源作相应的操作</strong></li>
+<li>所有需要更新资源状态的操作均通过 API Server 的 REST API 进行</li>
+</ul>
+</li>
+<li>API Server 也会直接调用 Kubelet API（如 logs, exec, attach 等），默认不校验 Kubelet 证书，但可以通过 <code>--kubelet-certificate-authority</code> 开启（而 GKE 通过 SSH 隧道保护它们之间的通信）</li>
+</ul>
+<blockquote>
+<p>RESTful API的设计原则包括以下几个方面：</p>
+<ol>
+<li>资源：RESTful API将网络上的所有内容视为资源，每个资源都有一个唯一的URL地址。</li>
+<li>表现层：RESTful API通过不同的表现层(Representations)来表示资源,常见的表现层包括JSON、XML等格式。</li>
+<li>状态转移：RESTful API通过HTTP协议提供了一组标准的操作，包括GET、POST、PUT、DELETE等，这些操作可以对资源进行状态转移。</li>
+</ol>
+</blockquote>
+<h4 id="创建Pod的流程"><a href="#创建Pod的流程" class="headerlink" title="创建Pod的流程"></a>创建Pod的流程</h4><p><img src="/images/image-20230326213549403.png" alt="image-20230326213549403"></p>
+<ol>
+<li>用户通过 REST API 创建一个 Pod。</li>
+<li>API服务器接收到请求后，进行权限验证和数据校验。如果请求通过验证，API服务器将Pod资源存储在etcd中。</li>
+<li>Scheduluer 检测到未绑定 Node 的 Pod，开始调度并更新 Pod 的 Node 绑定。</li>
+<li>Kubelet 检测到有新的 Pod 调度过来，通过 Container Runtime 运行该 Pod。</li>
+<li>Container Runtime（如Docker）下载镜像并启动容器：kubelet会与容器运行时（如Docker）协作，完成容器镜像的拉取和容器的启动。</li>
+<li>Kubelet 通过 Container Runtime 取到 Pod 状态，并更新到 API Server 中</li>
+</ol>
+<h2 id="Master组件"><a href="#Master组件" class="headerlink" title="Master组件"></a>Master组件</h2><h4 id="API-Server"><a href="#API-Server" class="headerlink" title="API Server"></a>API Server</h4><p>kube-apiserver 是 Kubernetes 最重要的核心组件之一，主要提供以下的功能：</p>
+<ul>
+<li>提供集群管理的 REST API 接口，包括认证、授权、数据校验以及集群状态变更等</li>
+<li>提供其他模块之间的数据交互和通信的枢纽（其他模块通过 API Server 查询或修改数据，<strong>只有 API Server 才直接操作 etcd</strong>）</li>
+</ul>
+<p>下面详细描述Kubernetes中的API Server组件的特点和功能：</p>
+<ol>
+<li>提供API接口：API Server对外提供RESTful API接口，可以通过HTTP&#x2F;HTTPS请求访问。用户、管理员以及其他Kubernetes组件（如kubectl、控制器、调度器等）都是通过API Server与Kubernetes集群进行交互。</li>
+<li>资源管理：API Server负责处理来自外部请求的增删改查操作，对Kubernetes内部资源（如Pods、Services、Deployments等）进行管理。所有的资源对象都通过API Server进行创建、更新和删除。</li>
+<li>数据持久化：API Server会将资源的信息存储在etcd中，确保数据的一致性和持久化。etcd是一个高可用的分布式键值存储，用于保存Kubernetes集群的配置数据和状态信息。</li>
+<li>权限验证和访问控制：API Server集成了多种安全机制，包括认证（Authentication）、授权（Authorization）和准入控制（Admission Control）。API Server会对每个请求进行身份验证，然后根据RBAC（基于角色的访问控制）策略判断用户是否有权限执行相应的操作。</li>
+<li>集群内部协调：API Server还负责协调集群内部的其他控制平面组件。例如，当有新的Pod创建时，API Server会通知调度器进行调度；当资源状态发生变化时，API Server会通知相关的控制器进行处理。</li>
+<li>可扩展性：API Server支持自定义资源定义（CRD）和扩展API服务器，以便用户可以根据需要扩展Kubernetes的功能。</li>
+<li>高可用：为了确保集群的稳定性，通常会部署多个API Server实例以实现负载均衡和高可用。在这种情况下，所有的API Server实例共享同一个etcd集群。</li>
+</ol>
+<h4 id="REST-API"><a href="#REST-API" class="headerlink" title="REST API"></a>REST API</h4><p>kube-apiserver 支持同时提供 https（默认监听在 6443 端口）和 http API（默认监听在 127.0.0.1 的 8080 端口），其中 http API 是非安全接口，不做任何认证授权机制，不建议生产环境启用。两个接口提供的 REST API 格式相同，参考 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/kubernetes-api/">Kubernetes API Reference</a> 查看所有 API 的调用格式。</p>
+<p><img src="/images/image-20230326215032986.png" alt="image-20230326215032986"></p>
+<p>（上图基于v1.5)</p>
+<p>在实际使用中，通常通过 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/user-guide/kubectl-overview/">kubectl</a> 来访问 apiserver，也可以通过 Kubernetes 各个语言的 client 库来访问 apiserver。</p>
+<p>可通过 <code>kubectl api-versions</code> 和 <code>kubectl api-resources</code> 查询 Kubernetes API 支持的 API 版本以及资源对象。</p>
+<h6 id="API-版本"><a href="#API-版本" class="headerlink" title="API 版本"></a>API 版本</h6><p>表示 API 的稳定性和兼容性。Kubernetes API 分为两类：General（一般）API 和 Custom（自定义）API。General API 包括：</p>
+<ul>
+<li>Alpha：初期开发阶段，可能会发生较大变化，不保证稳定性。</li>
+<li>Beta：功能相对稳定，但仍可能发生变化，一般适用于测试环境。</li>
+<li>Stable：功能稳定，适用于生产环境。</li>
+</ul>
+<p>例如，执行 <code>kubectl api-versions</code> 命令，你会看到类似下面的输出：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">apps/v1</span><br><span class="line">authentication.k8s.io/v1</span><br><span class="line">autoscaling/v1</span><br><span class="line">autoscaling/v2</span><br><span class="line">autoscaling/v2beta2</span><br></pre></td></tr></table></figure>
+
+<h6 id="资源对象"><a href="#资源对象" class="headerlink" title="资源对象"></a>资源对象</h6><p>资源（Resource）是 Kubernetes API 中的核心概念，它表示 Kubernetes 中的对象，如 Pods、Services、Deployments 等。每种资源都对应一个特定的 API 组和版本。执行 <code>kubectl api-resources</code> 命令，你会看到类似下面的输出：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NAME       SHORTNAMES    APIGROUP            NAMESPACED         KIND</span><br><span class="line">configmaps     cm           v1                   <span class="literal">true</span>         ConfigMap</span><br><span class="line">endpoints      ep           v1                   <span class="literal">true</span>         Endpoints</span><br></pre></td></tr></table></figure>
+
+<p>API（Application Programming Interface，应用程序编程接口）是一组预先定义的函数、方法或类，用于开发人员编写应用程序。在 Kubernetes 中，API 用于描述 Kubernetes 集群中的各种资源对象，以及它们之间的关系和操作。</p>
+<p>资源（Resource）是 Kubernetes API 中的核心概念，表示 Kubernetes 中的对象，如 Pods、Services、Deployments 等。资源是 Kubernetes 系统中的实体，用于描述集群的状态和配置。<strong>每个资源都有一个唯一的名称和类型，可以通过 API 进行操作。</strong></p>
+<h4 id="访问控制"><a href="#访问控制" class="headerlink" title="访问控制"></a>访问控制</h4><p>Kubernetes API 的每个请求都会经过多阶段的访问控制之后才会被接受，这包括<strong>认证、授权以及准入控制</strong>（Admission Control）等。</p>
+<p><img src="/images/image-20230326220240790.png" alt="image-20230326220240790"></p>
+<h6 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h6><p>开启 TLS 时，所有的请求都需要首先认证。Kubernetes 支持多种认证机制，并支持同时开启多个认证插件（只要有一个认证通过即可）。如果认证成功，则用户的 <code>username</code> 会传入授权模块做进一步授权验证；而对于认证失败的请求则返回 HTTP 401。</p>
+<blockquote>
+<p><strong>Kubernetes 不直接管理用户</strong></p>
+<p>虽然 Kubernetes 认证和授权用到了 username，<strong>但 Kubernetes 并不直接管理用户</strong>，不能创建 <code>user</code> 对象，也不存储 username。</p>
+</blockquote>
+<h6 id="授权"><a href="#授权" class="headerlink" title="授权"></a>授权</h6><p>认证之后的请求就到了授权模块。跟认证类似，Kubernetes 也支持多种授权机制，并支持同时开启多个授权插件（只要有一个验证通过即可）。如果授权成功，则用户的请求会发送到准入控制模块做进一步的请求验证；而对于授权失败的请求则返回 HTTP 403.</p>
+<h6 id="准入控制"><a href="#准入控制" class="headerlink" title="准入控制"></a>准入控制</h6><p>准入控制（Admission Control）用来对请求做进一步的验证或添加默认参数。<strong>不同于授权和认证只关心请求的用户和操作，准入控制还处理请求的内容</strong>，并且仅对创建、更新、删除或连接（如代理）等有效，而对读操作无效。准入控制也支持同时开启多个插件，它们依次调用，<strong>只有全部插件都通过的请求</strong>才可以放过进入系统。</p>
+<p><img src="https://4130827217-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-LDAOok5ngY4pc1lEDes-887967055%2Fuploads%2Fgit-blob-ea68fcbe0a2cf2f2a3633343dce0c375b5b20caa%2Fkube-apiserver.png?alt=media" alt="img"></p>
  
       <!-- reward -->
       
@@ -188,30 +258,23 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tytao.github.io/2023/03/19/Useful-Blog/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tytao.github.io/2023/03/24/Kubernetes-%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84-%E5%AE%B9%E5%99%A8%E8%B0%83%E5%BA%A6%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/" rel="tag">Kubernetes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Learning/" rel="tag">Learning</a></li></ul>
+
     </footer>
   </div>
 
    
   <nav class="article-nav">
     
-      <a href="/2023/03/20/Git-Learning/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            Git Learning
-          
-        </div>
-      </a>
     
-    
-      <a href="/2021/07/18/6-824-lab1-MapReduce/" class="article-nav-link">
+      <a href="/2023/03/24/The-Go-Memory-Model/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">6.824 lab1 MapReduce</div>
+        <div class="article-nav-title">The Go Memory Model</div>
       </a>
     
   </nav>
